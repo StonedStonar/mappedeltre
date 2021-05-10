@@ -9,20 +9,39 @@ public class PostalInformation {
 
     private String nameOfPlace;
 
-    private int postalCodeOfPlace;
+    private Long postalCodeOfPlace;
 
-    private int municipality;
+    private Long countyAndMunicipalityNumber;
 
     /**
      * Makes an instance of the postal information object.
      * @param nameOfPlace the name of the place that has this postal code.
      * @param postalCode the postal code of this place.
      */
-    public PostalInformation(String nameOfPlace, int postalCode){
+    public PostalInformation(String nameOfPlace, Long postalCode, Long newCountyAndMunicipalityNumber){
         checkIfPostalCodeIsValid(postalCode);
-        checkString(nameOfPlace, "name of the place");
+        PostalFacade.checkString(nameOfPlace, "name of the place");
+        PostalFacade.checkIfCountyAndMunicipalityNumberIsValid(newCountyAndMunicipalityNumber);
         postalCodeOfPlace = postalCode;
         this.nameOfPlace = nameOfPlace;
+        countyAndMunicipalityNumber = newCountyAndMunicipalityNumber;
+    }
+
+    /**
+     * Gets the county and municipality number from the object.
+     * @return the county and municipality number.
+     */
+    public Long getCountyAndMunicipalityNumber(){
+        return countyAndMunicipalityNumber;
+    }
+
+    /**
+     * Sets the county and municipality number to a new value.
+     * @param newCountyAndMunicipalityNumber the new county and municipality number.
+     */
+    public void setCountyAndMunicipalityNumber(Long newCountyAndMunicipalityNumber){
+        PostalFacade.checkIfCountyAndMunicipalityNumberIsValid(newCountyAndMunicipalityNumber);
+        countyAndMunicipalityNumber = newCountyAndMunicipalityNumber;
     }
 
     /**
@@ -34,39 +53,44 @@ public class PostalInformation {
     }
 
     /**
+     * Sets the name of the postal code place to a new value.
+     * @param newName the new name of the postal place.
+     */
+    public void setNameOfPlace(String newName){
+        PostalFacade.checkString(newName, "name of the postal code place");
+        nameOfPlace = newName;
+    }
+
+    /**
      * Gets the postalcode of the place.
      * @return the postalcode as a int of this place.
      */
-    public int getPostalCodeOfPlace() {
+    public Long getPostalCodeOfPlace() {
         return postalCodeOfPlace;
+    }
+
+    /**
+     * Sets the postal code of this object to a new value.
+     * @param newPostalCode the new postal code to this place.
+     */
+    public void setPostalCodeOfPlace(Long newPostalCode){
+        checkIfPostalCodeIsValid(newPostalCode);
+        postalCodeOfPlace = newPostalCode;
     }
 
     /**
      * Checks if the postal code is of a valid format.
      * @param postCode the postal code you want to check.
      */
-    private void checkIfPostalCodeIsValid(int postCode){
-        if ((postCode < 0000) || (postCode > 9999)){
+    public static void checkIfPostalCodeIsValid(Long postCode){
+        if ((postCode == null) || (postCode <= PostalFacade.getMinPostalCodeValue()) || (postCode > PostalFacade.getMaxPostalCodeValue())){
             String error = "is too short";
-            if (postCode > 9999){
+            if (postCode == null){
+                error = "null";
+            }else if (postCode > PostalFacade.getMaxPostalCodeValue()){
                 error = "is too long";
             }
             throw new IllegalArgumentException("The postal code " + error + " must be a number between 0000 and 9999");
-        }
-    }
-
-    /**
-     * Checks if the string is empty or null.
-     * @param wordToCheck the word you want to check if its empty or null.
-     * @param prefix the prefix you want in the exception.
-     */
-    private void checkString(String wordToCheck, String prefix){
-        if ((wordToCheck == null) || (wordToCheck.isEmpty())){
-            String error = "empty";
-            if (wordToCheck == null){
-                error = "null";
-            }
-            throw new IllegalArgumentException("The " + prefix + " cannot be " + error + ".");
         }
     }
 }
