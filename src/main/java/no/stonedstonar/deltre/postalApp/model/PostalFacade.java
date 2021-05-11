@@ -4,8 +4,15 @@ import no.stonedstonar.deltre.postalApp.model.exceptions.CouldNotAddCountyExcept
 import no.stonedstonar.deltre.postalApp.model.exceptions.CouldNotAddPostalInformationException;
 import no.stonedstonar.deltre.postalApp.model.exceptions.CouldNotGetCountyException;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.net.URISyntaxException;
+import java.nio.charset.Charset;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 
 /**
  * Represents the backbone of the application. Handles all the GUI interaction and logs the error that could occur in
@@ -29,6 +36,7 @@ public class PostalFacade {
 
     private Logger logger;
 
+
     /**
      * Makes an instance of the postal facade object.
      */
@@ -36,7 +44,81 @@ public class PostalFacade {
         postalRegister = new PostalRegister();
         countyRegister = new CountyRegister();
         logger = Logger.getLogger(getClass().toString());
+        addAllCounties();
+        try {
+            loadFile();
+        }catch (Exception exception){
+            System.out.println(exception.getMessage());
+        }
     }
+
+    /**
+     * Adds all the counties in Norway to the register.
+     */
+    private void addAllCounties(){
+        try {
+            countyRegister.addCountyWithName("Oslo", 0300L);
+            countyRegister.addCountyWithName("Rogaland", 1100L);
+            countyRegister.addCountyWithName("Møre og Romsdal", 1500L);
+            countyRegister.addCountyWithName("Nordland", 1800L);
+            countyRegister.addCountyWithName("Viken", 3000L);
+            countyRegister.addCountyWithName("Innlandet", 3400L);
+            countyRegister.addCountyWithName("Vestfold og Telemark", 3800L);
+            countyRegister.addCountyWithName("Agder", 4200L);
+            countyRegister.addCountyWithName("Vestland", 4600L);
+            countyRegister.addCountyWithName("Trøndelag", 5000L);
+            countyRegister.addCountyWithName("Troms og Finnmark", 5400L);
+            countyRegister.addCountyWithName("Svalbard", 2100L);
+            countyRegister.addCountyWithName("Jan Mayen", 2200L);
+        }catch (CouldNotAddCountyException exception){
+            logger.log(Level.WARNING, exception.getMessage());
+        }
+    }
+
+    private void loadFile() {
+        Path path = Path.of("src\\main\\resources\\postnummer.txt");
+        try(BufferedReader bufferedReader = Files.newBufferedReader(path, Charset.forName("Cp1252"))) {
+            String lineToRead = bufferedReader.readLine();
+            while (lineToRead != null){
+                lineToRead = bufferedReader.readLine();
+                if (lineToRead != null){
+                    String[] listOfStrings = lineToRead.split("\t+");
+                    if (listOfStrings.length == 5){
+                        addNewInformation(listOfStrings);
+                    }
+                }
+            }
+        }catch (IOException exception){
+          System.out.println(exception);
+        }
+    }
+
+    private void addNewInformation(String[] listOfStrings){
+        Long postalCode = Long.parseLong(listOfStrings[0]);
+        String place = listOfStrings[1];
+        Long countyAndMunicipalityNumber = Long.parseLong(listOfStrings[2]);
+        String municipality = listOfStrings[3];
+        String postCategory = listOfStrings[4];
+        System.out.println(listOfStrings[0] + " " +listOfStrings[1]);
+        if (!countyRegister.checkIfCountyIsInRegister(countyAndMunicipalityNumber)){
+            logger.log(Level.WARNING, "County is not found in the list: " + countyAndMunicipalityNumber);
+        }
+
+        try {
+            if (!countyRegister.checkIfMunicipalityIsInCounty(countyAndMunicipalityNumber)) {
+                addMunicipality(municipality, countyAndMunicipalityNumber);
+            }
+        }catch (CouldNotGetCountyException exception){
+            logger.log(Level.WARNING, exception.getMessage());
+        }
+
+        try {
+            addPostalInformation(place, postalCode, countyAndMunicipalityNumber);
+        }catch (IllegalArgumentException exception){
+            logger.log(Level.WARNING, exception.getMessage());
+        }
+    }
+
 
     /**
      * Adds a postal information object to the postal register.
@@ -52,7 +134,6 @@ public class PostalFacade {
             logger.log(Level.INFO, exception.getMessage());
         }
     }
-
 
     /**
      * Adds the wanted county to the county register.

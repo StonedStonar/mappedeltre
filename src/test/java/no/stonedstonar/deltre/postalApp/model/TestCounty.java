@@ -18,7 +18,7 @@ public class TestCounty {
      * @return a county with one municipality.
      */
     private County setUpTestSpace(){
-        County county = new County("Innlandet");
+        County county = new County("Innlandet", 34);
         county.addMunicipality("Nord-Aurdal", 51L);
         return county;
     }
@@ -29,7 +29,7 @@ public class TestCounty {
     @DisplayName("Tests if the county constructor works with invalid input.")
     public void TestIfCountryConstructorWorksWithInvalidInput(){
         try {
-            County county = new County(null);
+            County county = new County(null, 34);
             fail("Expected to get a IllegalArgumentException since the input is invalid.");
         }catch (IllegalArgumentException exception){
             assertTrue(true);
@@ -43,7 +43,7 @@ public class TestCounty {
     @DisplayName("Tests if the county constructor works with valid input.")
     public void TestIfCountyConstructorWorksWithValidInput(){
         try {
-            County county = new County("Innlandet");
+            County county = new County("Innlandet", 34);
             assertTrue(true);
         }catch (IllegalArgumentException exception){
             fail("Expected the county to be made since the format is valid.");
@@ -73,7 +73,8 @@ public class TestCounty {
     public void TestIfAddMunicipalityMethodWorksWithInvalidNumber(){
         County county = setUpTestSpace();
         try {
-            county.addMunicipality("Etnedal", 100L);
+            //Todo: Endre denne så vi har en failsafe.
+            county.addMunicipality("Etnedal", 10000L);
             fail("Expected to get a IllegalArgumentException since the input is invalid.");
         }catch (IllegalArgumentException exception){
             assertTrue(true);

@@ -1,4 +1,4 @@
-package no.stonedstonar.deltre.postalApp.ui.controller;
+package no.stonedstonar.deltre.postalApp.ui.controllers;
 
 /**
  * Represents a general controller that is used in the loading of a scene.

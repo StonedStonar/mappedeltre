@@ -83,7 +83,7 @@ public class TestCountyRegister {
     public void TestIfAddMunicipalityToCountyWorksWithInvalidNumberInput(){
         CountyRegister countyRegister = setUpTestSpace();
         try {
-            countyRegister.addMunicipalityToCounty("Nord-Aurdal", 2050L);
+            countyRegister.addMunicipalityToCounty("Nord-Aurdal", 10000L);
             fail("Expected to get a Exception since the input is invalid.");
         }catch (CouldNotGetCountyException | IllegalArgumentException exception){
             assertTrue(true);
@@ -130,7 +130,7 @@ public class TestCountyRegister {
         try {
             countyRegister.getMunicipality(3052L);
             fail("Expected to get a exception since the input is not in the system.");
-        }catch (IllegalArgumentException exception){
+        }catch (IllegalArgumentException | CouldNotGetCountyException exception){
             assertTrue(true);
         }
     }
@@ -145,7 +145,7 @@ public class TestCountyRegister {
         try {
             countyRegister.getMunicipality(3051L);
             assertTrue(true);
-        }catch (IllegalArgumentException exception){
+        }catch (IllegalArgumentException | CouldNotGetCountyException exception){
             fail("Expected to get the municipality since the input is valid.");
         }
     }

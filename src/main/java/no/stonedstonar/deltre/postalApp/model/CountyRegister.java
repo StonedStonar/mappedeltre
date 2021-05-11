@@ -3,8 +3,8 @@ package no.stonedstonar.deltre.postalApp.model;
 import no.stonedstonar.deltre.postalApp.model.exceptions.CouldNotAddCountyException;
 import no.stonedstonar.deltre.postalApp.model.exceptions.CouldNotGetCountyException;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.time.temporal.ValueRange;
+import java.util.*;
 
 /**
  * Represents a county register where all the county's of this country are stored in case the government changes
@@ -15,13 +15,13 @@ import java.util.Map;
 public class CountyRegister {
 
 
-    private Map<Long, County> countyMap;
+    private List<County> countyList;
 
     /**
      * Makes an instance of the county register for this country.
      */
     public CountyRegister(){
-        countyMap = new HashMap<>();
+        countyList = new ArrayList<>();
     }
 
     /**
@@ -31,14 +31,11 @@ public class CountyRegister {
      * @throws CouldNotAddCountyException gets thrown if the county by this number is already in the register.
      */
     public void addCountyWithName(String countyName, Long countyAndMunicipalityNumber) throws CouldNotAddCountyException {
-        County county = new County(countyName);
         PostalFacade.checkIfCountyAndMunicipalityNumberIsValid(countyAndMunicipalityNumber);
-        Long countyNumber = getSubNumber(countyAndMunicipalityNumber, 0, 2);
-        if (!countyMap.containsKey(countyAndMunicipalityNumber)){
-            countyMap.put(countyNumber, county);
-        }else{
-            throw new CouldNotAddCountyException("Could not add the county by name " + countyName + " and number " + countyAndMunicipalityNumber + " since they are allready in the register.");
-        }
+        long camLong = getSubNumberAsString(countyAndMunicipalityNumber, 0, 2);
+        County county = new County(countyName, camLong);
+        countyList.add(county);
+
     }
 
     /**
@@ -50,30 +47,60 @@ public class CountyRegister {
     public void addMunicipalityToCounty(String municipalityName, Long countyAndMunicipalityNumber) throws CouldNotGetCountyException {
         PostalFacade.checkString(municipalityName, "municipality name");
         PostalFacade.checkIfCountyAndMunicipalityNumberIsValid(countyAndMunicipalityNumber);
-        Long countyNumber = getSubNumber(countyAndMunicipalityNumber, 0, 2);
-        Long municipalityNumber = getSubNumber(countyAndMunicipalityNumber, 2, 4);
-        if (countyMap.containsKey(countyNumber)){
-            countyMap.get(countyNumber).addMunicipality(municipalityName, municipalityNumber);
-        }else {
-            throw new CouldNotGetCountyException("The county with this number is not in the register:" + countyAndMunicipalityNumber);
+        if (checkIfCountyIsInRegister(countyAndMunicipalityNumber)){
+            County county = getCounty(countyAndMunicipalityNumber);
+            county.addMunicipality(municipalityName, countyAndMunicipalityNumber);
         }
     }
 
     /**
-     * Checks if the county by this number is in the register.
-     * @param countyAndMunicipalityNumber the county number you want to check.
-     * @return <code>true</code> if the county by this number is in the register.
-     *         <code>false</code> if the county by this name isn't in the register.
+     * Checks if the county is in the register.
+     * @param countyAndMunicipalityNumber the county and municipality number you want to check.
+     * @return <code>true</code> if the county is in the register.
+     *         <code>false</code> if the county is not in the register.
      */
     public boolean checkIfCountyIsInRegister(Long countyAndMunicipalityNumber){
         boolean valid;
+        PostalFacade.checkIfCountyAndMunicipalityNumberIsValid(countyAndMunicipalityNumber);
+        Long countyNumber = getSubNumberAsString(countyAndMunicipalityNumber, 0, 2);
         try {
-            PostalFacade.checkIfCountyAndMunicipalityNumberIsValid(countyAndMunicipalityNumber);
-            Long countyNumber = getSubNumber(countyAndMunicipalityNumber, 0, 2);
-            valid = countyMap.containsKey(countyNumber);
-        }catch (IllegalArgumentException exception){
+            valid = countyList.stream().filter(county -> county.getCountyNumber() == countyNumber).findFirst().isPresent();
+        }catch (NoSuchElementException exception){
             valid = false;
         }
+        return valid;
+    }
+
+    /**
+     * Get's a county by its county number.
+     * @param countyAndMunicipalityNumber the countyAndMunicipalityNumber of this county.
+     * @return a county that matches this number.
+     * @throws CouldNotGetCountyException gets thrown if the county is not found in the register.
+     */
+    private County getCounty(Long countyAndMunicipalityNumber) throws CouldNotGetCountyException {
+        Long countyLong = getSubNumberAsString(countyAndMunicipalityNumber, 0, 2);
+        County countyToGet;
+        try {
+            countyToGet = countyList.stream().filter(county -> county.getCountyNumber() == countyLong).findFirst().get();
+
+        }catch (NoSuchElementException exception){
+            throw new CouldNotGetCountyException("Could not find the county with the code " + countyLong + " in this register.");
+        }
+        return countyToGet;
+    }
+
+    /**
+     * Checks if the municipality is already in the register.
+     * @param countyAndMunicipalityNumber the county and municipality number you want to check.
+     * @return <code>true</code> if the municipality is in the county.
+     *         <code>false</code> if the municipality is not in the county.
+     * @throws CouldNotGetCountyException
+     */
+    public boolean checkIfMunicipalityIsInCounty(Long countyAndMunicipalityNumber) throws CouldNotGetCountyException{
+        boolean valid;
+        PostalFacade.checkIfCountyAndMunicipalityNumberIsValid(countyAndMunicipalityNumber);
+        County county = getCounty(countyAndMunicipalityNumber);
+        valid = county.checkIfMunicipalityIsInCounty(countyAndMunicipalityNumber);
         return valid;
     }
 
@@ -81,14 +108,14 @@ public class CountyRegister {
      * Gets a municipality name based on the countyWithMunicipality number.
      * @param countyWithMunicipality the number that contains the county and municipality.
      * @return the municipality that matches this number.
+     * @throws CouldNotGetCountyException
      */
-    public String getMunicipality(Long countyWithMunicipality){
-        Long countyNumber = getSubNumber(countyWithMunicipality, 0, 2);
+    public String getMunicipality(Long countyWithMunicipality) throws CouldNotGetCountyException {
+        long countyNumber = getSubNumberAsString(countyWithMunicipality, 0, 2);
         String municipalityName;
-        if (countyMap.containsKey(countyNumber)){
-            County county = countyMap.get(countyNumber);
-            Long municipalityNumber = getSubNumber(countyWithMunicipality, 2, 4);
-            municipalityName = county.getMunicipality(municipalityNumber);
+        if (checkIfCountyIsInRegister(countyNumber)){
+            County county = getCounty(countyNumber);
+            municipalityName = county.getMunicipality(countyWithMunicipality);
         }else {
             throw new IllegalArgumentException("The county with the number" + countyNumber + " is not in this county register.");
         }
@@ -96,20 +123,44 @@ public class CountyRegister {
     }
 
     /**
-     * Gets a certain portion of a long number.
-     * @param numberToBeSplit the number you want to get a part of.
-     * @param firstPlace the first number you want to get. Goes from 0 to number length.
-     * @param lastPlace the last number you want included in the cut.
-     * @return a new number based on the first place and the last place. If you want 2 numbers out you can set
-     *         firstplace to be 0 and last place to be 2.
+     * Gets the parts of a number that you want.
+     * @param numberToBeSplit the number you want the substring of.
+     * @param firstPlace the first character you want.
+     * @param lastPlace the last character you want
+     * @return a new value that is the right formnat you want.
      */
-    private Long getSubNumber(Long numberToBeSplit, int firstPlace, int lastPlace){
+    private Long getSubNumberAsString(Long numberToBeSplit, int firstPlace, int lastPlace){
         if (numberToBeSplit == null){
             throw new IllegalArgumentException("The municipality number cannot be null.");
         }
-        String numberAsString = Long.toString(numberToBeSplit);
-        Long countyNumber = Long.parseLong(numberAsString.substring(firstPlace,lastPlace));
+        String numString = Long.toString(numberToBeSplit);
+        int max = lastPlace;;
+        int min = firstPlace;
+        if (numString.length() < lastPlace){
+            max = lastPlace - (lastPlace - (numString.length()));
+        }
 
-        return countyNumber;
+        String substring = numString.substring(min,max);
+
+        long value = Long.parseLong(substring);
+
+        return value;
+    }
+
+    /**
+     * Gets the amount of Municipalities in the register.
+     * @return a int that is the amount of Municipalities in the register.
+     */
+    public int getSize(){
+        int size = 0;
+        ArrayList<Number> values = new ArrayList<>();
+        countyList.forEach(county -> {
+            values.add(county.getSize());
+        });
+        Iterator<Number> it = values.iterator();
+        while (it.hasNext()){
+            size += it.next().intValue();
+        }
+        return size;
     }
 }

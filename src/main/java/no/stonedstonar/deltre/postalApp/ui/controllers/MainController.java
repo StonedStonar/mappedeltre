@@ -1,4 +1,4 @@
-package no.stonedstonar.deltre.postalApp.ui.controller;
+package no.stonedstonar.deltre.postalApp.ui.controllers;
 
 public class MainController implements Controller{
 

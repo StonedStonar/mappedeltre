@@ -1,13 +1,14 @@
 package no.stonedstonar.deltre.postalApp.ui.views;
 
 import javafx.application.Application;
-import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
+import javafx.scene.control.Label;
+import javafx.scene.control.TableView;
 import javafx.stage.Stage;
 import no.stonedstonar.deltre.postalApp.model.PostalFacade;
-import no.stonedstonar.deltre.postalApp.ui.controller.Controller;
-import no.stonedstonar.deltre.postalApp.ui.controller.MainController;
+import no.stonedstonar.deltre.postalApp.ui.controllers.Controller;
+
 
 import java.io.IOException;
 
@@ -19,34 +20,39 @@ import java.io.IOException;
 public class PostalApp extends Application {
 
     //Using singleton since i only need one main application window.
-    private static volatile PostalApp app;
+    //private static volatile PostalApp app;
 
     private Stage stage;
+
+    private PostalFacade postalFacade;
 
     /**
      * Makes an instance of the postal app.
      */
     public PostalApp(){
-        getApp();
+        postalFacade = new PostalFacade();
+
     }
 
-    /**
-     * Gets the app window so the other classes can switch the scenes.
-     * @return a postal app object that loads scenes and sets scenes.
-     */
-    public static PostalApp getApp(){
-        if(app == null){
-            synchronized (PostalApp.class){
-                app = new PostalApp();
-            }
-        }
-        return app;
-    }
+//    /**
+//     * Gets the app window so the other classes can switch the scenes.
+//     * @return a postal app object that loads scenes and sets scenes.
+//     */
+//    public static PostalApp getApp(){
+//        if(app == null){
+//            synchronized (PostalApp.class){
+//                app = new PostalApp();
+//            }
+//        }
+//        return app;
+//    }
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-        stage = primaryStage;
-
+        //stage = primaryStage;
+        Scene scene = new Scene(new TableView<>());
+        primaryStage.setScene(scene);
+        primaryStage.show();
     }
 
     /**
