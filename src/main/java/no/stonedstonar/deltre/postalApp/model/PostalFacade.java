@@ -45,11 +45,8 @@ public class PostalFacade {
         countyRegister = new CountyRegister();
         logger = Logger.getLogger(getClass().toString());
         addAllCounties();
-        try {
-            loadFile();
-        }catch (Exception exception){
-            System.out.println(exception.getMessage());
-        }
+        loadFile();
+
     }
 
     /**
@@ -75,6 +72,9 @@ public class PostalFacade {
         }
     }
 
+    /**
+     * Loads the standard file.
+     */
     private void loadFile() {
         Path path = Path.of("src\\main\\resources\\postnummer.txt");
         try(BufferedReader bufferedReader = Files.newBufferedReader(path, Charset.forName("Cp1252"))) {
@@ -89,17 +89,20 @@ public class PostalFacade {
                 }
             }
         }catch (IOException exception){
-          System.out.println(exception);
+          logger.log(Level.SEVERE, exception.getMessage());
         }
     }
 
+    /**
+     * Adds all the post information objects and also adds the Counties and Municipalities.
+     * @param listOfStrings the set of strings that you want to be made into objects.
+     */
     private void addNewInformation(String[] listOfStrings){
         Long postalCode = Long.parseLong(listOfStrings[0]);
         String place = listOfStrings[1];
         Long countyAndMunicipalityNumber = Long.parseLong(listOfStrings[2]);
         String municipality = listOfStrings[3];
         String postCategory = listOfStrings[4];
-        System.out.println(listOfStrings[0] + " " +listOfStrings[1]);
         if (!countyRegister.checkIfCountyIsInRegister(countyAndMunicipalityNumber)){
             logger.log(Level.WARNING, "County is not found in the list: " + countyAndMunicipalityNumber);
         }
