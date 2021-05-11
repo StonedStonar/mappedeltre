@@ -32,4 +32,10 @@ public interface Window {
      * @return the title you want displayed in the far left of the window.
      */
     String getTitleName();
+
+    /**
+     * Sets the scene of the window.
+     * @param scene the new scene you want to set the window to.
+     */
+    void setScene(Scene scene);
 }

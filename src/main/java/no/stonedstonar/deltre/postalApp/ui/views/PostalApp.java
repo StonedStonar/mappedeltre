@@ -7,6 +7,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableView;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import no.stonedstonar.deltre.postalApp.model.PostalFacade;
 import no.stonedstonar.deltre.postalApp.model.PostalInformation;
 import no.stonedstonar.deltre.postalApp.ui.controllers.Controller;
@@ -60,7 +61,8 @@ public class PostalApp extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
         stage = primaryStage;
-        setScene(new MainWindow(postalFacade));
+        MainWindow mainWindow = new MainWindow(postalFacade);
+        setScene(mainWindow);
         primaryStage.show();
     }
 
@@ -81,12 +83,14 @@ public class PostalApp extends Application {
             }
 
             scene = loadScene(nameOfFXML, controller);
+            window.setScene(scene);
         }
         String mainTitle = "Post applikasjon";
         String title = window.getTitleName();
         if ((title != null) && (!title.isEmpty())){
             mainTitle += " - " + title;
         }
+        window.getController().updateContent();
         stage.setTitle(mainTitle);
         stage.setScene(scene);
 
@@ -103,7 +107,6 @@ public class PostalApp extends Application {
         FXMLLoader loader = new FXMLLoader(getClass().getResource( fullNameOfFile));
         loader.setController(controller);
         Scene newScene = new Scene(loader.load());
-        controller.updateContent();
         return newScene;
     }
 }

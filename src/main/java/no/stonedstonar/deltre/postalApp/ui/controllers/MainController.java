@@ -36,17 +36,15 @@ public class MainController implements Controller{
 
     private TableView<PostalInformation> postalInformationTableView;
 
-    private MainWindow mainWindow;
 
     /**
      * Makes a instance of the main controller class.
      */
-    public MainController(TableView<PostalInformation> tableView, MainWindow mainWindow){
+    public MainController(TableView<PostalInformation> tableView){
         if (tableView == null){
             throw new IllegalArgumentException("The tableview cannot be null or empty.");
         }
         postalInformationTableView = tableView;
-        this.mainWindow = mainWindow;
     }
 
     @Override
@@ -61,7 +59,6 @@ public class MainController implements Controller{
      * Sets all the actions of the buttons and the fields.
      */
     private void setButtonActions(){
-        PostalFacade postalFacade = PostalApp.getApp().getPostalFacade();
         searchField.textProperty().addListener((obs, oldValue, newValue) -> {
             if (!newValue.isEmpty()){
                try {
@@ -76,7 +73,7 @@ public class MainController implements Controller{
                    }
                }
             }else {
-                mainWindow.updateObservablePostalInformation();
+                MainWindow.getMainWindow().updateObservablePostalInformation();
             }
             if (postalInformationTableView.getItems().size() == 0){
                 postalInformationTableView.setPlaceholder(new Label("Ingen resultater funnet med søkeord \"" + newValue + "\"" ));
@@ -85,12 +82,13 @@ public class MainController implements Controller{
     }
 
     /**
-     *
-     * @param searchWord
+     * Searches for the name that user puts in.
+     * @param searchWord the new value the user has put in.
+     * @param oldValue the old value that was in the searchfield.
      */
     private void searchForName(String searchWord, String oldValue){
         if (oldValue.length() > searchWord.length()){
-            mainWindow.updateObservablePostalInformation();
+            MainWindow.getMainWindow().updateObservablePostalInformation();
         }
         ObservableList<PostalInformation> obs = postalInformationTableView.getItems();
         int start = 0;
@@ -99,7 +97,6 @@ public class MainController implements Controller{
             boolean valid = false;
             if (postalInformation.getNameOfPlace().length() >= stop){
                 String subString = getSubString(postalInformation.getNameOfPlace(), start, stop);
-                System.out.println(subString);
                 if (subString.equals(searchWord.toLowerCase())){
                     valid = true;
                 }
@@ -111,14 +108,14 @@ public class MainController implements Controller{
     }
 
     /**
-     *
-     * @param newValue
-     * @param oldValue
-     * @param textField
+     * The search function to search the table by number.
+     * @param newValue the new value in the searchfield.
+     * @param oldValue the old value from the searchfield.
+     * @param textField the textfield we want to set to an old value if the user puts in a letter.
      */
     private void sortByPostalCode(String newValue, String oldValue, TextField textField){
         if (oldValue.length() > newValue.length()){
-            mainWindow.updateObservablePostalInformation();
+            MainWindow.getMainWindow().updateObservablePostalInformation();
         }
         int start = 0;
         int stop = newValue.length();
@@ -138,7 +135,17 @@ public class MainController implements Controller{
         obs.setAll(newObs);
     }
 
+    /**
+     * Gets a substring of a word.
+     * @param word the word you want the substring of.
+     * @param start the letter the substring should start on.
+     * @param stop the last letter the substring should end on.
+     * @return a substring that is within the start and stop value.
+     */
     private String getSubString(String word, int start, int stop){
+        if (start > stop){
+            throw new IllegalArgumentException("The start value must be less than the stop value.");
+        }
         return word.substring(start, stop).toLowerCase();
     }
 }

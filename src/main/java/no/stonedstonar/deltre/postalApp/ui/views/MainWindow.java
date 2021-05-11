@@ -10,7 +10,6 @@ import no.stonedstonar.deltre.postalApp.model.PostalInformation;
 import no.stonedstonar.deltre.postalApp.ui.controllers.Controller;
 import no.stonedstonar.deltre.postalApp.ui.controllers.MainController;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,6 +22,8 @@ public class MainWindow implements Window{
 
     private MainController mainController;
 
+    private static volatile MainWindow mainWindow;
+
     private Scene scene;
 
     private String fxmlName;
@@ -31,17 +32,35 @@ public class MainWindow implements Window{
 
     private String title;
 
+    private List<PostalInformation> postalList;
+
 
     /**
      * Makes an instance of the main window.
      * @param postalFacade the postal facade this program uses as its backbone.
      */
     public MainWindow(PostalFacade postalFacade){
-        setUpObservablePostalInformation(postalFacade);
+        if (postalFacade == null){
+            throw new IllegalArgumentException("The postal facade cannot be null.");
+        }
+        postalList = postalFacade.getPostalRegister();
+        setUpObservablePostalInformation();
         TableView<PostalInformation> postalInformationTableView = makeTableView(postalFacade);
-        mainController = new MainController(postalInformationTableView, this);
+        mainController = new MainController(postalInformationTableView);
         fxmlName = "MainWindow";
         title = "Framside";
+        mainWindow = this;
+    }
+
+    /**
+     * Gets the main window object.
+     * @return the main window object.
+     */
+    public static MainWindow getMainWindow(){
+        if (mainWindow == null){
+            throw new IllegalArgumentException("The mainwindow object havnet been created yet.");
+        }
+        return mainWindow;
     }
 
     @Override
@@ -64,29 +83,28 @@ public class MainWindow implements Window{
         return title;
     }
 
-    /**
-     * Gets the observable list.
-     * @return the observable list.
-     */
-    public ObservableList<PostalInformation> getObservableList(){
-        return observablePostalInformation;
+    @Override
+    public void setScene(Scene scene) {
+        if (scene != null){
+            this.scene = scene;
+        }else {
+            throw new IllegalArgumentException("The scene cannot be null or empty.");
+        }
     }
 
     /**
      * Sets up the observablePostalInformation list.
-     * @param postalFacade the postal facade this program uses as its backbone.
      */
-    private void setUpObservablePostalInformation(PostalFacade postalFacade){
-        ArrayList<PostalInformation> list = (ArrayList<PostalInformation>) postalFacade.getPostalRegister();
+    private void setUpObservablePostalInformation(){
+        ArrayList<PostalInformation> list = (ArrayList<PostalInformation>) postalList;
         observablePostalInformation = FXCollections.observableArrayList(list);
     }
 
     /**
-     *
-     * @param postalFacade
+     * Updates the observable list with the information it needs.
      */
     public void updateObservablePostalInformation(){
-        observablePostalInformation.setAll(PostalApp.getApp().getPostalFacade().getPostalRegister());
+        observablePostalInformation.setAll(postalList);
     }
 
 
