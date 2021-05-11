@@ -1,5 +1,6 @@
 package no.stonedstonar.deltre.postalApp.model;
 
+import javafx.collections.ObservableList;
 import no.stonedstonar.deltre.postalApp.model.exceptions.CouldNotAddPostalInformationException;
 import no.stonedstonar.deltre.postalApp.model.exceptions.CouldNotGetPostalInformationException;
 

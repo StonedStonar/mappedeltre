@@ -39,7 +39,7 @@ public class MainWindow implements Window{
     public MainWindow(PostalFacade postalFacade){
         setUpObservablePostalInformation(postalFacade);
         TableView<PostalInformation> postalInformationTableView = makeTableView(postalFacade);
-        mainController = new MainController(postalInformationTableView);
+        mainController = new MainController(postalInformationTableView, this);
         fxmlName = "MainWindow";
         title = "Framside";
     }
@@ -65,6 +65,14 @@ public class MainWindow implements Window{
     }
 
     /**
+     * Gets the observable list.
+     * @return the observable list.
+     */
+    public ObservableList<PostalInformation> getObservableList(){
+        return observablePostalInformation;
+    }
+
+    /**
      * Sets up the observablePostalInformation list.
      * @param postalFacade the postal facade this program uses as its backbone.
      */
@@ -77,8 +85,8 @@ public class MainWindow implements Window{
      *
      * @param postalFacade
      */
-    public void updateObservablePostalInformation(PostalFacade postalFacade){
-
+    public void updateObservablePostalInformation(){
+        observablePostalInformation.setAll(PostalApp.getApp().getPostalFacade().getPostalRegister());
     }
 
 
