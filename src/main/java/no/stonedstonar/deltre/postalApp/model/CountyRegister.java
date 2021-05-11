@@ -77,7 +77,7 @@ public class CountyRegister {
      * @return a county that matches this number.
      * @throws CouldNotGetCountyException gets thrown if the county is not found in the register.
      */
-    private County getCounty(Long countyAndMunicipalityNumber) throws CouldNotGetCountyException {
+    public County getCounty(Long countyAndMunicipalityNumber) throws CouldNotGetCountyException {
         Long countyLong = getSubNumberAsString(countyAndMunicipalityNumber, 0, 2);
         County countyToGet;
         try {
@@ -94,7 +94,7 @@ public class CountyRegister {
      * @param countyAndMunicipalityNumber the county and municipality number you want to check.
      * @return <code>true</code> if the municipality is in the county.
      *         <code>false</code> if the municipality is not in the county.
-     * @throws CouldNotGetCountyException
+     * @throws CouldNotGetCountyException gets thrown if the county is not found in the register.
      */
     public boolean checkIfMunicipalityIsInCounty(Long countyAndMunicipalityNumber) throws CouldNotGetCountyException{
         boolean valid;

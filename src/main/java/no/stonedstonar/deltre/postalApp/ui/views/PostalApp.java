@@ -26,8 +26,6 @@ public class PostalApp extends Application {
 
     private PostalFacade postalFacade;
 
-
-
     /**
      * Makes an instance of the postal app.
      */
@@ -52,7 +50,7 @@ public class PostalApp extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
         stage = primaryStage;
-        setScene(new MainWindow());
+        setScene(new MainWindow(postalFacade));
         primaryStage.show();
     }
 

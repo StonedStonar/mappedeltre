@@ -2,6 +2,8 @@ package no.stonedstonar.deltre.postalApp.ui.views;
 
 import javafx.collections.ObservableList;
 import javafx.scene.Scene;
+import javafx.scene.control.TableView;
+import no.stonedstonar.deltre.postalApp.model.PostalFacade;
 import no.stonedstonar.deltre.postalApp.model.PostalInformation;
 import no.stonedstonar.deltre.postalApp.ui.controllers.Controller;
 import no.stonedstonar.deltre.postalApp.ui.controllers.MainController;
@@ -24,9 +26,11 @@ public class MainWindow implements Window{
 
     /**
      * Makes an instance of the main window.
+     * @param postalFacade the postal facade this program uses as its backbone.
      */
-    public MainWindow(){
-        mainController = new MainController();
+    public MainWindow(PostalFacade postalFacade){
+        TableView<PostalInformation> postalInformationTableView = makeTableView(postalFacade);
+        mainController = new MainController(postalInformationTableView);
         fxmlName = "MainWindow";
     }
 
@@ -43,5 +47,17 @@ public class MainWindow implements Window{
     @Override
     public String getFXMLName() {
         return fxmlName;
+    }
+
+    /**
+     * Makes a tableview with all its contents.
+     * @param postalFacade the postal facade this program uses.
+     * @return a table with all the information the user needs to use the program.
+     */
+    private TableView<PostalInformation> makeTableView(PostalFacade postalFacade){
+        TableView<PostalInformation> tableView = new PostalInformationTableViewBuilder(postalFacade).addTableViewPostalCodeCol()
+                .addTableViewPostalPlaceCol().addTableViewCountyCol()
+                .addTableViewMunicipalityCol().build();
+        return tableView;
     }
 }

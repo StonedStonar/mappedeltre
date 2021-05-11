@@ -50,6 +50,42 @@ public class PostalFacade {
     }
 
     /**
+     * Gets the municipality with that number if its in the system.
+     * @param countyAndMunicipalityNumber the county and municipality number.
+     * @return the name of the municipality if its in the system.
+     * @throws CouldNotGetCountyException gets thrown if the county could not be found.
+     */
+    public String getMunicipalityName(long countyAndMunicipalityNumber) throws CouldNotGetCountyException {
+        checkIfCountyAndMunicipalityNumberIsValid(countyAndMunicipalityNumber);
+        String municipality;
+        try {
+            municipality = countyRegister.getMunicipality(countyAndMunicipalityNumber);
+        }catch (CouldNotGetCountyException | IllegalArgumentException exception){
+            logger.log(Level.WARNING, exception.getMessage());
+            throw exception;
+        }
+        return municipality;
+    }
+
+    /**
+     * Gets the county with that number if its in the system.
+     * @param countyAndMunicipalityNumber the county and municipality number.
+     * @return the county that mathces this number.
+     * @throws CouldNotGetCountyException gets thrown if the county could not be found.
+     */
+    public County getCounty(long countyAndMunicipalityNumber) throws CouldNotGetCountyException {
+        checkIfCountyAndMunicipalityNumberIsValid(countyAndMunicipalityNumber);
+        County county;
+        try {
+            county = countyRegister.getCounty(countyAndMunicipalityNumber);
+        }catch (CouldNotGetCountyException | IllegalArgumentException exception){
+            logger.log(Level.WARNING, exception.getMessage());
+            throw exception;
+        }
+        return county;
+    }
+
+    /**
      * Adds all the counties in Norway to the register.
      */
     private void addAllCounties(){
