@@ -15,12 +15,12 @@ public class County {
 
     private String nameOfCounty;
 
-
     private long countyNumber;
 
     /**
      * Makes an instance of the county class.
      * @param nameOfNewCounty the name of the county you want to create.
+     * @param countyNumber the county number this county should be.
      */
     public County(String nameOfNewCounty, long countyNumber){
         PostalFacade.checkString(nameOfNewCounty, "name of the county");

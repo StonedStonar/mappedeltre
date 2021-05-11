@@ -1,20 +1,16 @@
 package no.stonedstonar.deltre.postalApp.ui.controllers;
 
-import javafx.beans.Observable;
+
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.geometry.Pos;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
-import no.stonedstonar.deltre.postalApp.model.PostalFacade;
 import no.stonedstonar.deltre.postalApp.model.PostalInformation;
 import no.stonedstonar.deltre.postalApp.ui.views.MainWindow;
-import no.stonedstonar.deltre.postalApp.ui.views.PostalApp;
 
-import java.text.NumberFormat;
 import java.util.List;
 import java.util.stream.Collectors;
 

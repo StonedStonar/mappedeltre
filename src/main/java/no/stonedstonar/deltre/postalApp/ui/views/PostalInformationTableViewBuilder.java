@@ -1,11 +1,8 @@
 package no.stonedstonar.deltre.postalApp.ui.views;
 
-import javafx.beans.property.SimpleLongProperty;
 import javafx.beans.property.SimpleStringProperty;
-import javafx.geometry.Pos;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
-import javafx.scene.control.cell.PropertyValueFactory;
 import no.stonedstonar.deltre.postalApp.model.County;
 import no.stonedstonar.deltre.postalApp.model.PostalFacade;
 import no.stonedstonar.deltre.postalApp.model.PostalInformation;
@@ -13,6 +10,8 @@ import no.stonedstonar.deltre.postalApp.model.exceptions.CouldNotGetCountyExcept
 
 /**
  * Represents a builder to make a table view for postal information.
+ * @author Steinar Hjelle Midthus
+ * @version 0.1
  */
 public class PostalInformationTableViewBuilder {
 
@@ -59,7 +58,11 @@ public class PostalInformationTableViewBuilder {
      */
     public PostalInformationTableViewBuilder addTableViewPostalPlaceCol(){
         TableColumn<PostalInformation, String> placeCol = new TableColumn<>("Stedsnavn");
-        placeCol.setCellValueFactory(new PropertyValueFactory<>("nameOfPlace"));
+        placeCol.setCellValueFactory(postalInformation -> {
+            String word = postalInformation.getValue().getNameOfPlace();
+            SimpleStringProperty wordToDisplay = new SimpleStringProperty(makeStringLowerCaseAndFirstLargeCase(word));
+            return wordToDisplay;
+        });
         tableView.getColumns().add(placeCol);
         return this;
     }
@@ -82,7 +85,7 @@ public class PostalInformationTableViewBuilder {
             if (county != null){
                 display = county.getNameOfCounty();
             }
-            SimpleStringProperty string = new SimpleStringProperty(display);
+            SimpleStringProperty string = new SimpleStringProperty(makeStringLowerCaseAndFirstLargeCase(display));
             return string;
         });
         tableView.getColumns().add(countyCol);
@@ -103,14 +106,14 @@ public class PostalInformationTableViewBuilder {
             }catch (CouldNotGetCountyException | IllegalArgumentException exception){
                 municipality = "Ingen kommune";
             }
-            SimpleStringProperty string = new SimpleStringProperty(municipality);
+            SimpleStringProperty string = new SimpleStringProperty(makeStringLowerCaseAndFirstLargeCase(municipality));
             return string;
         });
         tableView.getColumns().add(municipalityCol);
         return this;
     }
 
-//    public PostalInformationTableViewBuilder addTableViewPostBoxCol(){
+//   public PostalInformationTableViewBuilder addTableViewPostBoxCol(){
 //
 //    }
 
@@ -121,5 +124,16 @@ public class PostalInformationTableViewBuilder {
     public TableView<PostalInformation> build(){
         tableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
         return tableView;
+    }
+
+    /**
+     * Makes the string to a large first case and the rest to a lower case.
+     * @param word the word you want to have a first letter capetalized and the rest lower case.
+     * @return the word in the format described above.
+     */
+    private String makeStringLowerCaseAndFirstLargeCase(String word){
+        PostalFacade.checkString(word, "string to make lower case");
+        String newWord = word.substring(0, 1).toUpperCase() + word.substring(1).toLowerCase();
+        return newWord;
     }
 }

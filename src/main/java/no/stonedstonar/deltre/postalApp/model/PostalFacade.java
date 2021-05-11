@@ -6,7 +6,6 @@ import no.stonedstonar.deltre.postalApp.model.exceptions.CouldNotGetCountyExcept
 
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.net.URISyntaxException;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -167,7 +166,6 @@ public class PostalFacade {
         }
     }
 
-
     /**
      * Adds a postal information object to the postal register.
      * @param nameOfPlace the name of the place.
@@ -243,22 +241,6 @@ public class PostalFacade {
             }
             throw new IllegalArgumentException("The county and municipality number " + error);
         }
-    }
-
-    /**
-     * Gets the min value of the county and municipality number.
-     * @return the min value of the county and municipality number.
-     */
-    public static Long getMinLengthCountyAndMunicipalityNumber(){
-        return minLengthCountyAndMunicipalityNumber;
-    }
-
-    /**
-     * Gets the max value of the county and municipality number.
-     * @return the max value of the county and municipality number.
-     */
-    public static Long getMaxLengthCountyAndMunicipalityNumber(){
-        return maxLengthCountyAndMunicipalityNumber;
     }
 
     /**

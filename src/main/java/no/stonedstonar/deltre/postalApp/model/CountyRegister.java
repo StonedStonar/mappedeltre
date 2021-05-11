@@ -3,8 +3,10 @@ package no.stonedstonar.deltre.postalApp.model;
 import no.stonedstonar.deltre.postalApp.model.exceptions.CouldNotAddCountyException;
 import no.stonedstonar.deltre.postalApp.model.exceptions.CouldNotGetCountyException;
 
-import java.time.temporal.ValueRange;
-import java.util.*;
+import java.util.Iterator;
+import java.util.List;
+import java.util.ArrayList;
+import java.util.NoSuchElementException;
 
 /**
  * Represents a county register where all the county's of this country are stored in case the government changes
@@ -13,7 +15,6 @@ import java.util.*;
  * @version 0.1
  */
 public class CountyRegister {
-
 
     private List<County> countyList;
 
@@ -108,7 +109,7 @@ public class CountyRegister {
      * Gets a municipality name based on the countyWithMunicipality number.
      * @param countyWithMunicipality the number that contains the county and municipality.
      * @return the municipality that matches this number.
-     * @throws CouldNotGetCountyException
+     * @throws CouldNotGetCountyException gets thrown if the county is not found in the register.
      */
     public String getMunicipality(Long countyWithMunicipality) throws CouldNotGetCountyException {
         long countyNumber = getSubNumberAsString(countyWithMunicipality, 0, 2);

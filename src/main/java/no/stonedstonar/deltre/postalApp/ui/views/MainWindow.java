@@ -2,7 +2,6 @@ package no.stonedstonar.deltre.postalApp.ui.views;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.TableView;
 import no.stonedstonar.deltre.postalApp.model.PostalFacade;
