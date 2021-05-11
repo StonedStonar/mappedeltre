@@ -3,13 +3,12 @@ package no.stonedstonar.deltre.postalApp.ui.controllers;
 
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.scene.control.Label;
-import javafx.scene.control.MenuItem;
-import javafx.scene.control.TableView;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
+import no.stonedstonar.deltre.postalApp.model.PostalFacade;
 import no.stonedstonar.deltre.postalApp.model.PostalInformation;
 import no.stonedstonar.deltre.postalApp.ui.views.MainWindow;
+import no.stonedstonar.deltre.postalApp.ui.views.PostalApp;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -74,6 +73,16 @@ public class MainController implements Controller{
             if (postalInformationTableView.getItems().size() == 0){
                 postalInformationTableView.setPlaceholder(new Label("Ingen resultater funnet med søkeord \"" + newValue + "\"" ));
             }
+        });
+        quitMenu.setOnAction(actionEvent -> {
+
+        });
+        aboutMenu.setOnAction(actionEvnet -> {
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("Informasjons boks - Om Postkode applikasjonen");
+            alert.setHeaderText("Postkode applikasjon \nv0.1");
+            alert.setContentText("\nJava Version: " + System.getProperty("java.version") + "\nOperating system: " + System.getProperty("os.name") + "\n\nThis application was made by:\nSteinar Hjelle Midthus.");
+            alert.showAndWait();
         });
     }
 

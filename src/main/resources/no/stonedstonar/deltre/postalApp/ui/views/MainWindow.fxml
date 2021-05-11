@@ -48,14 +48,14 @@
   <children>
     <MenuBar VBox.vgrow="NEVER">
       <menus>
-        <Menu mnemonicParsing="false" text="File">
+        <Menu mnemonicParsing="false" text="Fil">
           <items>
-            <MenuItem fx:id="quitMenu" mnemonicParsing="false" text="Quit" />
+            <MenuItem fx:id="quitMenu" mnemonicParsing="false" text="Avslutt" />
           </items>
         </Menu>
-        <Menu mnemonicParsing="false" text="Help">
+        <Menu mnemonicParsing="false" text="Hjelp">
           <items>
-            <MenuItem fx:id="aboutMenu" mnemonicParsing="false" text="About Postal Application" />
+            <MenuItem fx:id="aboutMenu" mnemonicParsing="false" text="Om Postkode applikasjon" />
           </items>
         </Menu>
       </menus>
