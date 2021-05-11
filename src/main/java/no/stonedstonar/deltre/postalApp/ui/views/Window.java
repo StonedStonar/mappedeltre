@@ -26,4 +26,10 @@ public interface Window {
      * @return a FXML file name that can be used to load the scene.
      */
     String getFXMLName();
+
+    /**
+     * Gets the title of the window so it can be displayed in the far left corner.
+     * @return the title you want displayed in the far left of the window.
+     */
+    String getTitleName();
 }

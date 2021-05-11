@@ -38,8 +38,17 @@ public class PostalInformationTableViewBuilder {
      * @return the PostalInformationTableViewBuilder.
      */
     public PostalInformationTableViewBuilder addTableViewPostalCodeCol(){
-        TableColumn<PostalInformation, Long> postalCodeCol = new TableColumn<>("Post kode");
-        postalCodeCol.setCellValueFactory(new PropertyValueFactory("postalCodeOfPlace"));
+        TableColumn<PostalInformation, String> postalCodeCol = new TableColumn<>("Post kode");
+        postalCodeCol.setCellValueFactory(postalInformation -> {
+            long postalCode = postalInformation.getValue().getPostalCodeOfPlace();
+            String postalString = Long.toString(postalCode);
+            while (postalString.length() < 4){
+                String addZero = "0";
+                postalString = addZero + postalString;
+            }
+            SimpleStringProperty postalCodeFormat = new SimpleStringProperty(postalString);
+            return postalCodeFormat;
+        });
         tableView.getColumns().add(postalCodeCol);
         return this;
     }

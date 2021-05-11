@@ -72,7 +72,14 @@ public class PostalApp extends Application {
 
             scene = loadScene(nameOfFXML, controller);
         }
+        String mainTitle = "Post applikasjon";
+        String title = window.getTitleName();
+        if ((title != null) && (!title.isEmpty())){
+            mainTitle += " - " + title;
+        }
+        stage.setTitle(mainTitle);
         stage.setScene(scene);
+
     }
 
     /**

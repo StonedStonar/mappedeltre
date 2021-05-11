@@ -29,6 +29,8 @@ public class MainWindow implements Window{
 
     private ObservableList<PostalInformation> observablePostalInformation;
 
+    private String title;
+
 
     /**
      * Makes an instance of the main window.
@@ -39,7 +41,7 @@ public class MainWindow implements Window{
         TableView<PostalInformation> postalInformationTableView = makeTableView(postalFacade);
         mainController = new MainController(postalInformationTableView);
         fxmlName = "MainWindow";
-        ;
+        title = "Framside";
     }
 
     @Override
@@ -55,6 +57,11 @@ public class MainWindow implements Window{
     @Override
     public String getFXMLName() {
         return fxmlName;
+    }
+
+    @Override
+    public String getTitleName() {
+        return title;
     }
 
     /**
