@@ -24,6 +24,14 @@ public class PostalRegister {
     }
 
     /**
+     * Gets the postal list.
+     * @return a list that holds all the postal information.
+     */
+    public List<PostalInformation> getPostalList(){
+        return postalList;
+    }
+
+    /**
      * Adds a postal information object to the register.
      * @param postalInformation the postal information object that you want to add to the register.
      * @throws CouldNotAddPostalInformationException gets thrown if the input is null or allready in the system.

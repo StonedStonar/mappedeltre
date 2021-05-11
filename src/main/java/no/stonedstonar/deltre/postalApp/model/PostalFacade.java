@@ -10,6 +10,7 @@ import java.net.URISyntaxException;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -47,6 +48,14 @@ public class PostalFacade {
         addAllCounties();
         loadFile();
 
+    }
+
+    /**
+     * Gets the postal list from the register.
+     * @return the list with all the postal information in the system.
+     */
+    public List<PostalInformation> getPostalRegister(){
+        return postalRegister.getPostalList();
     }
 
     /**
