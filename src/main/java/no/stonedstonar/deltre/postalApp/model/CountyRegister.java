@@ -18,21 +18,48 @@ public class CountyRegister {
 
     private List<County> countyList;
 
+    private Long maxCountyAndMunicipalityLength;
+
+    private Long minCountyAndMunicipalityLength;
+
     /**
-     * Makes an instance of the county register for this country.
+     * Makes an instance of the county register.
+     * @param minCountyAndMunicipalityValue the min value the register should hold.
+     * @param maxCountyAndMunicipalityValue the max value that the register should hold.
      */
-    public CountyRegister(){
+    public CountyRegister(Long minCountyAndMunicipalityValue,Long maxCountyAndMunicipalityValue){
         countyList = new ArrayList<>();
+        if ((minCountyAndMunicipalityValue == null) || (maxCountyAndMunicipalityValue == null)){
+            throw new IllegalArgumentException("Min and max county and municipality values cannot be null");
+        }
+        this.maxCountyAndMunicipalityLength = maxCountyAndMunicipalityValue;
+        this.minCountyAndMunicipalityLength = minCountyAndMunicipalityValue;
     }
 
     /**
-     * Adds a county to the list.
-     * @param countyName the name of the county.
-     * @param countyAndMunicipalityNumber the number of the county and the municipality.
-     * @throws CouldNotAddCountyException gets thrown if the county by this number is already in the register.
+     * Gets the max value that the county and municipality can be.
+     * @return a long that says how big a county and municiplaity number can be in this class.
+     */
+    public long getMaxCountyAndMunicipalityLength(){
+        return maxCountyAndMunicipalityLength;
+    }
+
+    /**
+     * Gets the min value that the county and municipality can be.
+     * @return a long that says how small a county and municipality number can be in this class.
+     */
+    public long getMinCountyAndMunicipalityLength(){
+        return minCountyAndMunicipalityLength;
+    }
+
+    /**
+     *
+     * @param countyName
+     * @param countyAndMunicipalityNumber
+     * @throws CouldNotAddCountyException
      */
     public void addCountyWithName(String countyName, Long countyAndMunicipalityNumber) throws CouldNotAddCountyException {
-        PostalFacade.checkIfCountyAndMunicipalityNumberOrPostalCodeIsValid(countyAndMunicipalityNumber);
+        checkIfCountyAndMunicipalityNumberIsValid(countyAndMunicipalityNumber);
         long camLong = getSubNumberAsString(countyAndMunicipalityNumber, 0, 2);
         County county = new County(countyName, camLong);
         boolean nameInRegister = countyList.stream().anyMatch(c -> c.getNameOfCounty().equals(countyName));
@@ -44,7 +71,7 @@ public class CountyRegister {
             if (numberInRegister){
                 message = "county number";
             }
-            throw new IllegalArgumentException("The county by the " + message + " " + countyName + " is allready in the register.");
+            throw new IllegalArgumentException("The county by the " + message + " " + countyName + " is already in the register.");
         }
 
     }
@@ -56,8 +83,8 @@ public class CountyRegister {
      * @throws CouldNotGetCountyException gets thrown if the county does not exist.
      */
     public void addMunicipalityToCounty(String municipalityName, Long countyAndMunicipalityNumber) throws CouldNotGetCountyException {
-        PostalFacade.checkString(municipalityName, "municipality name");
-        PostalFacade.checkIfCountyAndMunicipalityNumberOrPostalCodeIsValid(countyAndMunicipalityNumber);
+        PostalSystem.checkString(municipalityName, "municipality name");
+        checkIfCountyAndMunicipalityNumberIsValid(countyAndMunicipalityNumber);
         if (checkIfCountyIsInRegister(countyAndMunicipalityNumber)){
             County county = getCounty(countyAndMunicipalityNumber);
             county.addMunicipality(municipalityName, countyAndMunicipalityNumber);
@@ -72,7 +99,7 @@ public class CountyRegister {
      */
     public boolean checkIfCountyIsInRegister(Long countyAndMunicipalityNumber){
         boolean valid;
-        PostalFacade.checkIfCountyAndMunicipalityNumberOrPostalCodeIsValid(countyAndMunicipalityNumber);
+        checkIfCountyAndMunicipalityNumberIsValid(countyAndMunicipalityNumber);
         Long countyNumber = getSubNumberAsString(countyAndMunicipalityNumber, 0, 2);
         try {
             valid = countyList.stream().filter(county -> county.getCountyNumber() == countyNumber).findFirst().isPresent();
@@ -109,7 +136,7 @@ public class CountyRegister {
      */
     public boolean checkIfMunicipalityIsInCounty(Long countyAndMunicipalityNumber) throws CouldNotGetCountyException{
         boolean valid;
-        PostalFacade.checkIfCountyAndMunicipalityNumberOrPostalCodeIsValid(countyAndMunicipalityNumber);
+        checkIfCountyAndMunicipalityNumberIsValid(countyAndMunicipalityNumber);
         County county = getCounty(countyAndMunicipalityNumber);
         valid = county.checkIfMunicipalityIsInCounty(countyAndMunicipalityNumber);
         return valid;
@@ -173,5 +200,19 @@ public class CountyRegister {
             size += it.next().intValue();
         }
         return size;
+    }
+
+    /**
+     * Checks if the CountyAndMunicipalityNumber is a valid format.
+     * @param countyAndMunicipalityNumber the number of the county and the municipality number that you want to check .
+     */
+    public void checkIfCountyAndMunicipalityNumberIsValid(Long countyAndMunicipalityNumber){
+        if ((countyAndMunicipalityNumber == null) || (countyAndMunicipalityNumber <= minCountyAndMunicipalityLength.longValue()) || (countyAndMunicipalityNumber > maxCountyAndMunicipalityLength.longValue())){
+            String error = "must be between 0000 and 9999.";
+            if (countyAndMunicipalityNumber == null){
+                error = "cannot be null.";
+            }
+            throw new IllegalArgumentException("The county and municipality number or postal code " + error);
+        }
     }
 }

@@ -20,7 +20,7 @@ public class TestPostalRegister {
      * @return a register with one postal information as content.
      */
     private PostalRegister setupTestSpace(){
-        PostalRegister postalRegister = new PostalRegister();
+        PostalRegister postalRegister = new PostalRegister(0, 9999);
         PostalInformation postalInformation = new PostalInformation("Aurdal", 2910L, 3451L);
         try {
             postalRegister.addPostalInformation(postalInformation);

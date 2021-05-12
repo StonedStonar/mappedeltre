@@ -7,6 +7,7 @@ import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
 import javafx.stage.FileChooser;
 import no.stonedstonar.deltre.postalApp.model.PostalInformation;
+import no.stonedstonar.deltre.postalApp.model.PostalSystem;
 import no.stonedstonar.deltre.postalApp.model.exceptions.InvalidFileFormatException;
 import no.stonedstonar.deltre.postalApp.ui.views.MainWindow;
 import no.stonedstonar.deltre.postalApp.ui.views.PostalApp;
@@ -112,8 +113,8 @@ public class MainController implements Controller{
             File fileSelected = fileChooser.showOpenDialog(null);
             if (fileSelected != null){
                 try {
-                    PostalApp postalApp = PostalApp.getApp();
-                    postalApp.getPostalFacade().loadSelectedFile(fileSelected);
+                    PostalSystem postalSystem = MainWindow.getMainWindow().getPostalSystem();
+                    postalSystem.loadSelectedFile(fileSelected);
                     MainWindow.getMainWindow().updateObservablePostalInformation();
                     searchField.setText("");
                     Alert alert = new Alert(Alert.AlertType.INFORMATION);

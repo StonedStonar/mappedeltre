@@ -1,8 +1,5 @@
 package no.stonedstonar.deltre.postalApp.model;
 
-import javafx.geometry.Pos;
-import jdk.jfr.StackTrace;
-import no.stonedstonar.deltre.postalApp.model.exceptions.CouldNotAddPostalInformationException;
 import no.stonedstonar.deltre.postalApp.model.exceptions.CouldNotGetCountyException;
 import no.stonedstonar.deltre.postalApp.model.exceptions.InvalidFileFormatException;
 import org.junit.jupiter.api.DisplayName;
@@ -18,22 +15,22 @@ import static org.junit.jupiter.api.Assertions.*;
  * @author Steinar Hjelle Midthus
  * @version 0.1
  */
-public class TestPostalFacade {
+public class TestPostalSystem {
 
     /**
      * Makes a basic postal facade that we can use for testing.
      * @return a postal facade that has been loaded from a file.
      */
-    private PostalFacade setUpTestSpace(){
-        PostalFacade postalFacade = new PostalFacade();
+    private PostalSystem setUpTestSpace(){
+        PostalSystem postalSystem = new PostalSystem("Norway", 0L, 9999L, 0L, 9999L);
         try {
             Path path = Path.of("src\\main\\resources\\postnummer.txt");
             File file = path.toFile();
-            postalFacade.loadSelectedFile(file);
+            postalSystem.loadSelectedFile(file);
         }catch (InvalidFileFormatException exception){
 
         }
-        return postalFacade;
+        return postalSystem;
     }
 
     /**
@@ -43,11 +40,11 @@ public class TestPostalFacade {
     @Test
     @DisplayName("Tests if the loadSelectedFile works as intended with invalid file type.")
     public void TestIfLoadSelectedFileWorksAsIntendedWithInvalidInput(){
-        PostalFacade postalFacade = new PostalFacade();
+        PostalSystem postalSystem = new PostalSystem("Norway", 0L, 9999L, 0L, 9999L);
         try {
             Path path = Path.of("src\\main\\resources\\invalidFile.txt");
             File file = path.toFile();
-            postalFacade.loadSelectedFile(file);
+            postalSystem.loadSelectedFile(file);
             fail("Expected to get a exception sine the input is invalid.");
         } catch (InvalidFileFormatException | IllegalArgumentException exception) {
             assertTrue(true);
@@ -61,11 +58,11 @@ public class TestPostalFacade {
     @Test
     @DisplayName("Tests if the loadSelectedFile works as intended with valid file type.")
     public void TestIfLoadSelectedFileWorksAsIntendedWithValidFile(){
-        PostalFacade postalFacade = new PostalFacade();
+        PostalSystem postalSystem = new PostalSystem("Norway", 0L, 9999L, 0L, 9999L);
         try {
             Path path = Path.of("src\\main\\resources\\postnummer.txt");
             File file = path.toFile();
-            postalFacade.loadSelectedFile(file);
+            postalSystem.loadSelectedFile(file);
             assertTrue(true);
         } catch (IllegalArgumentException | InvalidFileFormatException exception) {
             fail("Expected the file to be loaded since the input is valid.");
@@ -79,9 +76,9 @@ public class TestPostalFacade {
     @Test
     @DisplayName("Tests if the getMunicipalityName works as intended with invalid input.")
     public void TestIfGetMunicipalityNameWorksWithInvalidInput(){
-        PostalFacade postalFacade = setUpTestSpace();
+        PostalSystem postalSystem = setUpTestSpace();
         try {
-            postalFacade.getMunicipalityName(0000L);
+            postalSystem.getMunicipalityName(0000L);
             fail("Expected to get a exception since the number 0L is invalid format.");
         }catch (CouldNotGetCountyException | IllegalArgumentException exception){
             assertTrue(true);
@@ -95,9 +92,9 @@ public class TestPostalFacade {
     @Test
     @DisplayName("Tests if the getMunicipalityName works as intended with valid input.")
     public void TestIfGetMunicipalityNameWorksWithValidInput(){
-        PostalFacade postalFacade = setUpTestSpace();
+        PostalSystem postalSystem = setUpTestSpace();
         try {
-            postalFacade.getMunicipalityName(3451L);
+            postalSystem.getMunicipalityName(3451L);
             assertTrue(true);
         }catch (IllegalArgumentException | CouldNotGetCountyException exception){
             fail("Expected the postal facade to get a name since the input is valid.");
@@ -111,9 +108,9 @@ public class TestPostalFacade {
     @Test
     @DisplayName("Tests if the getCounty method works as intended with invalid input.")
     public void TestIFGetCountyWorksWithInvalidInput(){
-        PostalFacade postalFacade = setUpTestSpace();
+        PostalSystem postalSystem = setUpTestSpace();
         try {
-            postalFacade.getCounty(4001L);
+            postalSystem.getCounty(4001L);
             fail("Expected to get a exception since this number is not in the register.");
         }catch (IllegalArgumentException | CouldNotGetCountyException exception){
             assertTrue(true);
@@ -127,9 +124,9 @@ public class TestPostalFacade {
     @Test
     @DisplayName("Tests if the getCounty method works as intended with valid input.")
     public void TestIfGetCountyWorksWithValidInput(){
-        PostalFacade postalFacade = setUpTestSpace();
+        PostalSystem postalSystem = setUpTestSpace();
         try {
-            postalFacade.getCounty(3451L);
+            postalSystem.getCounty(3451L);
             assertTrue(true);
         }catch (IllegalArgumentException | CouldNotGetCountyException exception){
             fail("Expected to get a county since its a valid input.");

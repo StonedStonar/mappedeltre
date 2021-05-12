@@ -23,7 +23,7 @@ public class County {
      * @param countyNumber the county number this county should be.
      */
     public County(String nameOfNewCounty, long countyNumber){
-        PostalFacade.checkString(nameOfNewCounty, "name of the county");
+        PostalSystem.checkString(nameOfNewCounty, "name of the county");
         checkMunicipalityNumber(countyNumber);
         nameOfCounty = nameOfNewCounty;
         municipalityMap = new HashMap<>();
@@ -44,8 +44,7 @@ public class County {
      * @param numberOfMunicipality the number of the new municipality.
      */
     public void addMunicipality(String nameOfMunicipality, long numberOfMunicipality){
-        PostalFacade.checkString(nameOfMunicipality, "municipality name");
-        PostalFacade.checkIfCountyAndMunicipalityNumberOrPostalCodeIsValid(numberOfMunicipality);
+        PostalSystem.checkString(nameOfMunicipality, "municipality name");
         if (!municipalityMap.containsKey(numberOfMunicipality)){
             municipalityMap.put(numberOfMunicipality, nameOfMunicipality);
         }else {
@@ -67,7 +66,6 @@ public class County {
      * @return the name of the municipality that matches this number.
      */
     public String getMunicipality(long municipalityNumber){
-        PostalFacade.checkIfCountyAndMunicipalityNumberOrPostalCodeIsValid(municipalityNumber);
         String nameOfMunicipality;
         if (checkIfMunicipalityIsInCounty(municipalityNumber)){
             try {

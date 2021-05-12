@@ -4,7 +4,7 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import no.stonedstonar.deltre.postalApp.model.County;
-import no.stonedstonar.deltre.postalApp.model.PostalFacade;
+import no.stonedstonar.deltre.postalApp.model.PostalSystem;
 import no.stonedstonar.deltre.postalApp.model.PostalInformation;
 import no.stonedstonar.deltre.postalApp.model.exceptions.CouldNotGetCountyException;
 
@@ -17,13 +17,13 @@ public class PostalInformationTableViewBuilder {
 
     private TableView<PostalInformation> tableView;
 
-    private PostalFacade posFacade;
+    private PostalSystem posFacade;
 
     /**
      * Makes an instance of the PostalInformationTableViewBuilder.
      * @param postalFacade the postal facade that the tableview should use as default.
      */
-    public PostalInformationTableViewBuilder(PostalFacade postalFacade){
+    public PostalInformationTableViewBuilder(PostalSystem postalFacade){
         tableView = new TableView<>();
         if (postalFacade != null){
             posFacade = postalFacade;
@@ -41,7 +41,7 @@ public class PostalInformationTableViewBuilder {
         postalCodeCol.setCellValueFactory(postalInformation -> {
             long postalCode = postalInformation.getValue().getPostalCodeOfPlace();
             String postalString = Long.toString(postalCode);
-            while (postalString.length() < 4){
+            while (postalString.length() < MainWindow.getMainWindow().getPostalSystem().getPostalCodeMax()){
                 String addZero = "0";
                 postalString = addZero + postalString;
             }
@@ -128,7 +128,7 @@ public class PostalInformationTableViewBuilder {
      * @return the word in the format described above.
      */
     private String makeStringLowerCaseAndFirstLargeCase(String word){
-        PostalFacade.checkString(word, "string to make lower case");
+        PostalSystem.checkString(word, "string to make lower case");
         String newWord = word.substring(0, 1).toUpperCase() + word.substring(1).toLowerCase();
         return newWord;
     }

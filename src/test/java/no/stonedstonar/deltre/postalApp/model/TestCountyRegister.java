@@ -20,7 +20,7 @@ public class TestCountyRegister {
      * @return a CountyRegister with one county.
      */
     private CountyRegister setUpTestSpace(){
-        CountyRegister countyRegister = new CountyRegister();
+        CountyRegister countyRegister = new CountyRegister(0L, 9999L);
         try {
             countyRegister.addCountyWithName("Innlandet", 30L);
             countyRegister.addMunicipalityToCounty("Aurdal", 3051L);

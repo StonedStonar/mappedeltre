@@ -2,9 +2,10 @@ package no.stonedstonar.deltre.postalApp.ui.views;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.TableView;
-import no.stonedstonar.deltre.postalApp.model.PostalFacade;
+import no.stonedstonar.deltre.postalApp.model.PostalSystem;
 import no.stonedstonar.deltre.postalApp.model.PostalInformation;
 import no.stonedstonar.deltre.postalApp.ui.controllers.Controller;
 import no.stonedstonar.deltre.postalApp.ui.controllers.MainController;
@@ -33,22 +34,33 @@ public class MainWindow implements Window{
 
     private List<PostalInformation> postalList;
 
+    private PostalSystem postalSystem;
+
 
     /**
      * Makes an instance of the main window.
-     * @param postalFacade the postal facade this program uses as its backbone.
+     * @param postalSystem the postal system this screen should show.
      */
-    public MainWindow(PostalFacade postalFacade){
-        if (postalFacade == null){
-            throw new IllegalArgumentException("The postal facade cannot be null.");
+    public MainWindow(PostalSystem postalSystem){
+        if (postalSystem == null){
+            throw new IllegalArgumentException("The postal system cannot be null.");
         }
-        postalList = postalFacade.getPostalRegister();
+        postalList = postalSystem.getPostalRegister();
         setUpObservablePostalInformation();
-        TableView<PostalInformation> postalInformationTableView = makeTableView(postalFacade);
+        TableView<PostalInformation> postalInformationTableView = makeTableView(postalSystem);
         mainController = new MainController(postalInformationTableView);
         fxmlName = "MainWindow";
         title = "Framside";
         mainWindow = this;
+        this.postalSystem = postalSystem;
+    }
+
+    /**
+     * Gets the postal system that this window is holding.
+     * @return a postal system that this window is holding.
+     */
+    public PostalSystem getPostalSystem(){
+        return postalSystem;
     }
 
     /**
@@ -109,11 +121,11 @@ public class MainWindow implements Window{
 
     /**
      * Makes a tableview with all its contents.
-     * @param postalFacade the postal facade this program uses.
+     * @param postalSystem the postal system this program uses.
      * @return a table with all the information the user needs to use the program.
      */
-    private TableView<PostalInformation> makeTableView(PostalFacade postalFacade){
-        TableView<PostalInformation> tableView = new PostalInformationTableViewBuilder(postalFacade).addTableViewPostalCodeCol()
+    private TableView<PostalInformation> makeTableView(PostalSystem postalSystem){
+        TableView<PostalInformation> tableView = new PostalInformationTableViewBuilder(postalSystem).addTableViewPostalCodeCol()
                 .addTableViewPostalPlaceCol().addTableViewCountyCol()
                 .addTableViewMunicipalityCol().build();
         tableView.setItems(observablePostalInformation);

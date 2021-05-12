@@ -2,10 +2,12 @@ package no.stonedstonar.deltre.postalApp.ui.views;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
 import no.stonedstonar.deltre.postalApp.model.PostalFacade;
+import no.stonedstonar.deltre.postalApp.model.PostalSystem;
 import no.stonedstonar.deltre.postalApp.ui.controllers.Controller;
 
 
@@ -30,6 +32,7 @@ public class PostalApp extends Application {
      */
     public PostalApp(){
         postalFacade = new PostalFacade();
+        postalFacade.addPostalSystem("Norway", 0L, 9999L, 0L, 9999L);
         app = this;
     }
 
@@ -46,18 +49,11 @@ public class PostalApp extends Application {
         return app;
     }
 
-    /**
-     * Gets the postal facade that is used in the program.
-     * @return the postal facade that the program uses.
-     */
-    public PostalFacade getPostalFacade(){
-        return postalFacade;
-    }
-
     @Override
     public void start(Stage primaryStage) throws Exception {
         stage = primaryStage;
-        MainWindow mainWindow = new MainWindow(postalFacade);
+        PostalSystem postalSystem = postalFacade.getPostalSystemByName("Norway");
+        MainWindow mainWindow = new MainWindow(postalSystem);
         setScene(mainWindow);
         try {
             Image image = new Image(getClass().getResource("/images/posticon.png").toExternalForm());
@@ -78,7 +74,7 @@ public class PostalApp extends Application {
         if (scene == null){
             String nameOfFile = window.getFXMLName();
             Controller controller = window.getController();
-            PostalFacade.checkString(nameOfFile, "fxml file name");
+            PostalSystem.checkString(nameOfFile, "fxml file name");
             String nameOfFXML = nameOfFile + ".fxml";
             if (controller == null){
                 throw new IllegalArgumentException("The controller cannot be empty or null.");

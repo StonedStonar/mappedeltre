@@ -16,11 +16,23 @@ public class PostalRegister {
 
     private List<PostalInformation> postalList;
 
+    private Long minPostalCodeValue;
+
+    private Long maxPostalCodeValue;
+
     /**
      * Makes an instance of the postal register.
+     * @param minPostalCodeValue the minimum value of a post code that this postal register should contain.
+     * @param maxPostalCodeValue the max value of a post code that this postal register should contain.
      */
-    public PostalRegister(){
+    public PostalRegister(long minPostalCodeValue, long maxPostalCodeValue){
         postalList = new ArrayList<>();
+        this.minPostalCodeValue = minPostalCodeValue;
+        this.maxPostalCodeValue = maxPostalCodeValue;
+    }
+
+    public long getPostalCodeMax(){
+        return maxPostalCodeValue;
     }
 
     /**
@@ -40,6 +52,7 @@ public class PostalRegister {
         if (postalInformation == null) {
             throw new CouldNotAddPostalInformationException("The postal information object cannot be null.");
         }
+        checkIfPostalCodeIsValid(postalInformation.getPostalCodeOfPlace());
         if (postalList.contains(postalInformation)){
             throw new CouldNotAddPostalInformationException("The postal information object is already in the list.");
         }else {
@@ -55,7 +68,7 @@ public class PostalRegister {
      *         information objects in the system.
      */
     public PostalInformation getPostalInformation(Long postalCode) throws CouldNotGetPostalInformationException {
-        PostalInformation.checkIfPostalCodeIsValid(postalCode);
+        checkIfPostalCodeIsValid(postalCode);
         PostalInformation postalInformation;
         try {
             postalInformation = postalList.stream().filter(pi -> pi.getPostalCodeOfPlace().longValue() == postalCode.longValue()).findFirst().get();
@@ -63,5 +76,21 @@ public class PostalRegister {
             throw new CouldNotGetPostalInformationException("The postalinformation by the postal code " + postalCode + " is not in this register.");
         }
         return postalInformation;
+    }
+
+    /**
+     * Checks if the postal code is of a valid format.
+     * @param postCode the postal code you want to check.
+     */
+    public void checkIfPostalCodeIsValid(Long postCode){
+        if ((postCode == null) || (postCode <= minPostalCodeValue) || (postCode > maxPostalCodeValue)){
+            String error = "is too short";
+            if (postCode == null){
+                error = "null";
+            }else if (postCode > maxPostalCodeValue){
+                error = "is too long";
+            }
+            throw new IllegalArgumentException("The postal code " + error + " must be a number between 0000 and 9999");
+        }
     }
 }

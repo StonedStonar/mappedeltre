@@ -21,8 +21,7 @@ public class PostalInformation {
      */
     public PostalInformation(String nameOfPlace, Long postalCode, Long newCountyAndMunicipalityNumber){
         checkIfPostalCodeIsValid(postalCode);
-        PostalFacade.checkString(nameOfPlace, "name of the place");
-        PostalFacade.checkIfCountyAndMunicipalityNumberOrPostalCodeIsValid(newCountyAndMunicipalityNumber);
+        PostalSystem.checkString(nameOfPlace, "name of the place");
         postalCodeOfPlace = postalCode;
         this.nameOfPlace = nameOfPlace;
         countyAndMunicipalityNumber = newCountyAndMunicipalityNumber;
@@ -41,7 +40,7 @@ public class PostalInformation {
      * @param newCountyAndMunicipalityNumber the new county and municipality number.
      */
     public void setCountyAndMunicipalityNumber(Long newCountyAndMunicipalityNumber){
-        PostalFacade.checkIfCountyAndMunicipalityNumberOrPostalCodeIsValid(newCountyAndMunicipalityNumber);
+        checkIfPostalCodeIsValid(newCountyAndMunicipalityNumber);
         countyAndMunicipalityNumber = newCountyAndMunicipalityNumber;
     }
 
@@ -58,7 +57,7 @@ public class PostalInformation {
      * @param newName the new name of the postal place.
      */
     public void setNameOfPlace(String newName){
-        PostalFacade.checkString(newName, "name of the postal code place");
+        PostalSystem.checkString(newName, "name of the postal code place");
         nameOfPlace = newName;
     }
 
@@ -80,18 +79,12 @@ public class PostalInformation {
     }
 
     /**
-     * Checks if the postal code is of a valid format.
-     * @param postCode the postal code you want to check.
+     * Checks if the postal code is null or not.
+     * @param postalCode the postal code you want to check.
      */
-    public static void checkIfPostalCodeIsValid(Long postCode){
-        if ((postCode == null) || (postCode <= PostalFacade.getMinPostalCodeValue()) || (postCode > PostalFacade.getMaxPostalCodeValue())){
-            String error = "is too short";
-            if (postCode == null){
-                error = "null";
-            }else if (postCode > PostalFacade.getMaxPostalCodeValue()){
-                error = "is too long";
-            }
-            throw new IllegalArgumentException("The postal code " + error + " must be a number between 0000 and 9999");
+    private void checkIfPostalCodeIsValid(Long postalCode){
+        if (postalCode == null){
+            throw new IllegalArgumentException("The postal code cannot be null.");
         }
     }
 }
