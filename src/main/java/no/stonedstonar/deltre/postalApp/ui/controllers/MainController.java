@@ -5,10 +5,15 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
+import javafx.stage.FileChooser;
 import no.stonedstonar.deltre.postalApp.model.PostalInformation;
+import no.stonedstonar.deltre.postalApp.model.exceptions.InvalidFileFormatException;
 import no.stonedstonar.deltre.postalApp.ui.views.MainWindow;
+import no.stonedstonar.deltre.postalApp.ui.views.PostalApp;
 
+import java.io.File;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
@@ -28,6 +33,8 @@ public class MainController implements Controller{
     private GridPane mainGridPane;
     @FXML
     private MenuItem importMenu;
+    @FXML
+    private MenuItem helpMenu;
 
     private TableView<PostalInformation> postalInformationTableView;
 
@@ -76,14 +83,58 @@ public class MainController implements Controller{
         });
         searchField.setPromptText("Skriv inn et postnummer eller stedsnavn.");
         quitMenu.setOnAction(actionEvent -> {
-
+            Alert closeAlert = new Alert(Alert.AlertType.CONFIRMATION);
+            closeAlert.setTitle("Bekreftelse vindu - Lukke applikasjon");
+            closeAlert.setHeaderText("Bekreftelse vindu - Lukke applikasjon");
+            closeAlert.setContentText("Er du sikker på at du vil lukke applikasjonen?");
+            Optional result = closeAlert.showAndWait();
+            if ((result.isPresent()) && (result.get().equals(ButtonType.OK))){
+                PostalApp.getApp().exitApplication();
+            }
         });
         aboutMenu.setOnAction(actionEvnet -> {
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
-            alert.setTitle("Informasjons boks - Om Postkode applikasjonen");
+            alert.setTitle("Informasjons vindu - Om Postkode applikasjonen");
             alert.setHeaderText("Postkode applikasjon \nv0.1");
             alert.setContentText("\nJava Version: " + System.getProperty("java.version") + "\nOperating system: " + System.getProperty("os.name") + "\n\nThis application was made by:\nSteinar Hjelle Midthus.");
             alert.showAndWait();
+        });
+        importMenu.setOnAction(action -> {
+            Alert infoAlert = new Alert(Alert.AlertType.INFORMATION);
+            infoAlert.setTitle("Informasjons vindu - Importere egen fil.");
+            infoAlert.setHeaderText("Informasjons vindu - Importere fil");
+            infoAlert.setContentText("Når du importerer en ny fil i applikasjonen blir det gamle innholder slettet.");
+            infoAlert.showAndWait();
+            FileChooser fileChooser = new FileChooser();
+            fileChooser.setTitle("Fil velger - Importer postkode fil.");
+            fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Tekst fil", "*.txt"));
+            fileChooser.setSelectedExtensionFilter(new FileChooser.ExtensionFilter("Tekst fil", "*.txt"));
+            File fileSelected = fileChooser.showOpenDialog(null);
+            if (fileSelected != null){
+                try {
+                    PostalApp postalApp = PostalApp.getApp();
+                    postalApp.getPostalFacade().loadSelectedFile(fileSelected);
+                    MainWindow.getMainWindow().updateObservablePostalInformation();
+                    searchField.setText("");
+                    Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                    alert.setTitle("Informasjons vindu - Fil importert");
+                    alert.setHeaderText("Informasjons vindu - Fil importert");
+                    alert.setContentText("Filen du valgte har blitt importert.");
+                    alert.showAndWait();
+                } catch (InvalidFileFormatException exception) {
+                    Alert invalidFormatALert = new Alert(Alert.AlertType.ERROR);
+                    invalidFormatALert.setTitle("En feil har oppstått.");
+                    invalidFormatALert.setHeaderText("En feil har oppstått.");
+                    invalidFormatALert.setContentText("En feil har oppstått i lastingen av filen. \nDen er av feil format for denne applikasjonen. \nVennligst prøv en annen fil som har riktig format.");
+                    invalidFormatALert.showAndWait();
+                }catch (IllegalArgumentException exception){
+                    Alert errorAlert = new Alert(Alert.AlertType.ERROR);
+                    errorAlert.setTitle("En feil har oppstått.");
+                    errorAlert.setHeaderText("En feil har oppstått i lastingen av filen.");
+                    errorAlert.setContentText("En feil har oppstått i lastingen av filen. \nVennligst prøv på nytt.");
+                    errorAlert.showAndWait();
+                }
+            }
         });
     }
 

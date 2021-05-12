@@ -104,4 +104,11 @@ public class PostalApp extends Application {
         Scene newScene = new Scene(loader.load());
         return newScene;
     }
+
+    /**
+     * Closes the application.
+     */
+    public void exitApplication(){
+        stage.close();
+    }
 }

@@ -6,6 +6,7 @@ import no.stonedstonar.deltre.postalApp.model.exceptions.CouldNotGetCountyExcept
 import no.stonedstonar.deltre.postalApp.model.exceptions.InvalidFileFormatException;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
@@ -47,13 +48,6 @@ public class PostalFacade {
         countyRegister = new CountyRegister();
         logger = Logger.getLogger(getClass().toString());
         addAllCounties();
-        Path path  = Path.of("src\\main\\resources\\postnummer.txt");
-        try {
-            loadFile(path);
-        }catch (InvalidFileFormatException exception){
-            logger.log(Level.WARNING, exception.getMessage());
-        }
-
     }
 
     /**
@@ -126,7 +120,7 @@ public class PostalFacade {
     /**
      * Loads the standard file.
      * @param path the path of the file you want to load.
-     * @throws InvalidFileFormatException gets thrown if the path is invalid or the file format is invalid.
+     * @throws InvalidFileFormatException gets thrown if the path is invalid, the file format is invalid or the file is empty.
      */
     private void loadFile(Path path) throws InvalidFileFormatException {
         if (path == null){
@@ -145,11 +139,35 @@ public class PostalFacade {
         }catch (IOException exception){
           logger.log(Level.SEVERE, exception.getMessage());
         }
+        if (listOfAllLines.isEmpty()){
+            throw new InvalidFileFormatException("The file cannot be empty.");
+        }
         for (String[] listOfAllLine : listOfAllLines) {
             checkIfFileIsRightFormat(listOfAllLine);
         }
-
+        postalRegister.getPostalList().clear();
+        countyRegister = new CountyRegister();
+        addAllCounties();
         listOfAllLines.forEach(this::addNewInformation);
+    }
+
+    /**
+     * Loads the file that you want to load.
+     * @param file the file you want to load.
+     * @throws InvalidFileFormatException gets thrown if the path is invalid, the file format is invalid or the file is empty.
+     */
+    public void loadSelectedFile(File file) throws InvalidFileFormatException {
+        if (file.isFile()){
+            Path path = file.toPath();
+            try {
+                loadFile(path);
+            }catch (InvalidFileFormatException exception){
+                logger.log(Level.WARNING, exception.getMessage());
+                throw exception;
+            }
+        }else {
+            throw new IllegalArgumentException("The file cannot be null.");
+        }
     }
 
     /**
