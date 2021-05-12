@@ -45,7 +45,7 @@ public class PostalFacade {
         return postalSystem;
     }
 
-    
+
 
     /**
      * Adds a countries postal system to the Postal facade.
@@ -62,7 +62,12 @@ public class PostalFacade {
         checkLong(minPostalCodeLength, "minimum value of the postal code");
         checkLong(maxPostalCodeLength, "minimum value of the postal code");
         PostalSystem newPostalSystem = new PostalSystem(countryName, minLengthCountyAndMunicipalityNumber, maxLengthCountyAndMunicipalityNumber, minPostalCodeLength, maxPostalCodeLength);
-        postalSystems.add(newPostalSystem);
+        boolean allreadyInSystem = postalSystems.stream().anyMatch(postalSystem -> postalSystem.getCountry().equals(countryName));
+        if (allreadyInSystem){
+            throw new IllegalArgumentException("The postal system with this name is allready in the system.");
+        }else {
+            postalSystems.add(newPostalSystem);
+        }
     }
 
     /**

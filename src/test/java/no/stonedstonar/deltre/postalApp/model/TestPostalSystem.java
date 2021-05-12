@@ -11,7 +11,7 @@ import java.nio.file.Path;
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
- * A test class that tests the different functions of the PostalFacade class.
+ * A test class that tests the different functions of the PostalSystem class.
  * @author Steinar Hjelle Midthus
  * @version 0.1
  */

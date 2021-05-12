@@ -32,6 +32,9 @@ public class CountyRegister {
         if ((minCountyAndMunicipalityValue == null) || (maxCountyAndMunicipalityValue == null)){
             throw new IllegalArgumentException("Min and max county and municipality values cannot be null");
         }
+        if (minCountyAndMunicipalityValue >= maxCountyAndMunicipalityValue){
+            throw new IllegalArgumentException("The max value should be larger than the min value of the county and municipality value.");
+        }
         this.maxCountyAndMunicipalityLength = maxCountyAndMunicipalityValue;
         this.minCountyAndMunicipalityLength = minCountyAndMunicipalityValue;
     }

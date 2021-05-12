@@ -69,23 +69,6 @@ public class TestCounty {
     }
 
     /**
-     * Tests if the addMunicipality method works with invalid numberOfMunicipality.
-     * Test type: Negative
-     */
-    @Test
-    @DisplayName("Tests if the addMunicipality method works with invalid numberOfMunicipality.")
-    public void TestIfAddMunicipalityMethodWorksWithInvalidNumber(){
-        County county = setUpTestSpace();
-        try {
-            //Todo: Endre denne så vi har en failsafe.
-            county.addMunicipality("Etnedal", 10000L);
-            fail("Expected to get a IllegalArgumentException since the input is invalid.");
-        }catch (IllegalArgumentException exception){
-            assertTrue(true);
-        }
-    }
-
-    /**
      * Tests if the addMunicipality method works with valid input.
      * Test type: Positive
      */

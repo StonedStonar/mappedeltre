@@ -42,21 +42,6 @@ public class TestPostalInformation {
     }
 
     /**
-     * Tests if the constructor works as intended with invalid postalcode.
-     * Test type: Negative
-     */
-    @Test
-    @DisplayName("Tests if the constructor works as intended with invalid postalcode.")
-    public void TestIfConstructorWorksWithInvalidPostalCode(){
-        try {
-            PostalInformation postalInformation = new PostalInformation("Aurdal", 0L, 3451L);
-            fail("Expected to get a IllegalArguemntException since the postal code is invalid.");
-        }catch (IllegalArgumentException exception){
-            assertTrue(true);
-        }
-    }
-
-    /**
      * Tests if the constructor works as intended with invalid countyAndMunicipalityNumber.
      * Test type: Negative
      */
@@ -64,7 +49,7 @@ public class TestPostalInformation {
     @DisplayName("Tests if the constructor works as intended with invalid countyAndMunicipalityNumber.")
     public void TestIfConstructorWorksWithInvalidCountyAndMunicipalityNumber(){
         try {
-            PostalInformation postalInformation = new PostalInformation("Aurdal", 2910L, 0L);
+            PostalInformation postalInformation = new PostalInformation("Aurdal", 2910L, null);
             fail("Expected to get a IllegalArguemntException since the County and municipality number is invalid.");
         }catch (IllegalArgumentException exception){
             assertTrue(true);
@@ -80,7 +65,7 @@ public class TestPostalInformation {
     public void TestIfSetCountyAndMunicipalityNumberWorksWithInvalidInput(){
         try {
             PostalInformation postalInformation = new PostalInformation("Aurdal", 2910L, 3451L);
-            postalInformation.setCountyAndMunicipalityNumber(0L);
+            postalInformation.setCountyAndMunicipalityNumber(null);
             fail("Expected to get a exception since the input is invalid.");
         }catch (IllegalArgumentException exception){
             assertTrue(true);

@@ -26,11 +26,18 @@ public class PostalRegister {
      * @param maxPostalCodeValue the max value of a post code that this postal register should contain.
      */
     public PostalRegister(long minPostalCodeValue, long maxPostalCodeValue){
+        if (minPostalCodeValue >= maxPostalCodeValue){
+            throw new IllegalArgumentException("The maximum value for the postal code should be larger than the minimum value.");
+        }
         postalList = new ArrayList<>();
         this.minPostalCodeValue = minPostalCodeValue;
         this.maxPostalCodeValue = maxPostalCodeValue;
     }
 
+    /**
+     * Gets the postal code max.
+     * @return the max amount that the postalcode can be.
+     */
     public long getPostalCodeMax(){
         return maxPostalCodeValue;
     }

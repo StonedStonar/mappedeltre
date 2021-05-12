@@ -42,12 +42,15 @@ public class PostalSystem {
      */
     public PostalSystem(String countryName,Long minLengthCountyAndMunicipalityNumber, Long maxLengthCountyAndMunicipalityNumber, Long minPostalCodeLength, Long maxPostalCodeLength){
         checkString(countryName, "country name");
-        postalRegister = new PostalRegister(minPostalCodeLength, maxPostalCodeLength);
-        countyRegister = new CountyRegister(minLengthCountyAndMunicipalityNumber, maxLengthCountyAndMunicipalityNumber);
-        logger = Logger.getLogger(getClass().toString());
         if ((minLengthCountyAndMunicipalityNumber == null) || (maxLengthCountyAndMunicipalityNumber == null)){
             throw new IllegalArgumentException("The min and max length of the county and municipality number must be a number and not null.");
         }
+        if ((maxPostalCodeLength == null) || (minPostalCodeLength == null)){
+            throw new IllegalArgumentException("The max and min value for the postal code cannot be null.");
+        }
+        postalRegister = new PostalRegister(minPostalCodeLength, maxPostalCodeLength);
+        countyRegister = new CountyRegister(minLengthCountyAndMunicipalityNumber, maxLengthCountyAndMunicipalityNumber);
+        logger = Logger.getLogger(getClass().toString());
         if (countryName.equals("Norway")){
             addAllCountiesOfNorway();
         }
@@ -255,6 +258,7 @@ public class PostalSystem {
     private void addMunicipality(String municipalityName, Long countyAndMunicipalityNumber) throws CouldNotGetCountyException {
         try {
             checkString(municipalityName, "municipality name");
+            countyRegister.checkIfCountyAndMunicipalityNumberIsValid(countyAndMunicipalityNumber);
             countyRegister.addMunicipalityToCounty(municipalityName, countyAndMunicipalityNumber);
         }catch (CouldNotGetCountyException | IllegalArgumentException exception){
             logger.log(Level.WARNING, exception.getMessage());

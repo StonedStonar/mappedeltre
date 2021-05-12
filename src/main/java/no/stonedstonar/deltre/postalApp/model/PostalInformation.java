@@ -20,10 +20,11 @@ public class PostalInformation {
      * @param newCountyAndMunicipalityNumber the county and municipality number this postal information belongs to.
      */
     public PostalInformation(String nameOfPlace, Long postalCode, Long newCountyAndMunicipalityNumber){
-        checkIfPostalCodeIsValid(postalCode);
+        checkIfLongsIsValid(postalCode, "postal code");
         PostalSystem.checkString(nameOfPlace, "name of the place");
         postalCodeOfPlace = postalCode;
         this.nameOfPlace = nameOfPlace;
+        checkIfLongsIsValid(newCountyAndMunicipalityNumber, "county and municipality number");
         countyAndMunicipalityNumber = newCountyAndMunicipalityNumber;
     }
 
@@ -40,7 +41,7 @@ public class PostalInformation {
      * @param newCountyAndMunicipalityNumber the new county and municipality number.
      */
     public void setCountyAndMunicipalityNumber(Long newCountyAndMunicipalityNumber){
-        checkIfPostalCodeIsValid(newCountyAndMunicipalityNumber);
+        checkIfLongsIsValid(newCountyAndMunicipalityNumber, "county and municipality number");
         countyAndMunicipalityNumber = newCountyAndMunicipalityNumber;
     }
 
@@ -74,17 +75,17 @@ public class PostalInformation {
      * @param newPostalCode the new postal code to this place.
      */
     public void setPostalCodeOfPlace(Long newPostalCode){
-        checkIfPostalCodeIsValid(newPostalCode);
+        checkIfLongsIsValid(newPostalCode, "new postal code");
         postalCodeOfPlace = newPostalCode;
     }
 
     /**
      * Checks if the postal code is null or not.
-     * @param postalCode the postal code you want to check.
+     * @param longCode the postal code you want to check.
      */
-    private void checkIfPostalCodeIsValid(Long postalCode){
-        if (postalCode == null){
-            throw new IllegalArgumentException("The postal code cannot be null.");
+    private void checkIfLongsIsValid(Long longCode, String prefix){
+        if (longCode == null){
+            throw new IllegalArgumentException("The " + prefix + " code cannot be null.");
         }
     }
 }
