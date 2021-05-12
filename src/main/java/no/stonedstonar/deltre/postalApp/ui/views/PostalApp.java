@@ -3,12 +3,14 @@ package no.stonedstonar.deltre.postalApp.ui.views;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
 import javafx.stage.Stage;
 import no.stonedstonar.deltre.postalApp.model.PostalFacade;
 import no.stonedstonar.deltre.postalApp.ui.controllers.Controller;
 
 
 import java.io.IOException;
+import java.util.logging.Logger;
 
 /**
  * A class that represents the UI backbone. This classes task is just to load the scene and set the scene.
@@ -58,6 +60,12 @@ public class PostalApp extends Application {
         stage = primaryStage;
         MainWindow mainWindow = new MainWindow(postalFacade);
         setScene(mainWindow);
+        try {
+            Image image = new Image(getClass().getResource("/images/posticon.png").toExternalForm());
+            stage.getIcons().add(image);
+        }catch (NullPointerException exception){
+
+        }
         primaryStage.show();
     }
 

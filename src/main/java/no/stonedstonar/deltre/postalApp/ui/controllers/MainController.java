@@ -102,8 +102,8 @@ public class MainController implements Controller{
         importMenu.setOnAction(action -> {
             Alert infoAlert = new Alert(Alert.AlertType.INFORMATION);
             infoAlert.setTitle("Informasjons vindu - Importere egen fil.");
-            infoAlert.setHeaderText("Informasjons vindu - Importere fil");
-            infoAlert.setContentText("Når du importerer en ny fil i applikasjonen blir det gamle innholder slettet.");
+            infoAlert.setHeaderText("Importere fil");
+            infoAlert.setContentText("Når du importerer en ny fil i applikasjonen blir det gamle innholdet slettet.");
             infoAlert.showAndWait();
             FileChooser fileChooser = new FileChooser();
             fileChooser.setTitle("Fil velger - Importer postkode fil.");
@@ -118,7 +118,7 @@ public class MainController implements Controller{
                     searchField.setText("");
                     Alert alert = new Alert(Alert.AlertType.INFORMATION);
                     alert.setTitle("Informasjons vindu - Fil importert");
-                    alert.setHeaderText("Informasjons vindu - Fil importert");
+                    alert.setHeaderText("Fil importert");
                     alert.setContentText("Filen du valgte har blitt importert.");
                     alert.showAndWait();
                 } catch (InvalidFileFormatException exception) {
@@ -135,6 +135,13 @@ public class MainController implements Controller{
                     errorAlert.showAndWait();
                 }
             }
+        });
+        helpMenu.setOnAction(action -> {
+            Alert informationAlert = new Alert(Alert.AlertType.INFORMATION);
+            informationAlert.setTitle("Informasjons vindu - Hvordan bruke applikasjonen");
+            informationAlert.setHeaderText("Hvordan bruke applikasjonen");
+            informationAlert.setContentText("For å bruke applikasjonen må du først importere en fil. \nDette gjør du ved å trykke på fil også importer fil.\n\nEtter at du har importert filen kan du bruke søkefeltet over tabellen. \nHvis du søker på et post nummer kan du ikke bruke bosktaver.\nOg hvis du søker på stedsnavn kan du heller ikke bruke nummer siden Oslo og stedsnavn sjeldent inneholder et nummer.");
+            informationAlert.showAndWait();
         });
     }
 
