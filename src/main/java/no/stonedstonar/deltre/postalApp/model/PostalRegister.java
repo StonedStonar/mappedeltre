@@ -38,8 +38,9 @@ public class PostalRegister {
      * Gets the postal code max.
      * @return the max amount that the postalcode can be.
      */
-    public long getPostalCodeMax(){
-        return maxPostalCodeValue;
+    public long getPostalCodeMaxLength(){
+        String postCode = Long.toString(maxPostalCodeValue);
+        return postCode.length();
     }
 
     /**

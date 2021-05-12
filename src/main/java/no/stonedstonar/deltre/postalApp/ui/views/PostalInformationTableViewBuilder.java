@@ -41,7 +41,7 @@ public class PostalInformationTableViewBuilder {
         postalCodeCol.setCellValueFactory(postalInformation -> {
             long postalCode = postalInformation.getValue().getPostalCodeOfPlace();
             String postalString = Long.toString(postalCode);
-            while (postalString.length() < MainWindow.getMainWindow().getPostalSystem().getPostalCodeMax()){
+            while (postalString.length() < MainWindow.getMainWindow().getPostalSystem().getPostalCodeMaxLength()){
                 String addZero = "0";
                 postalString = addZero + postalString;
             }

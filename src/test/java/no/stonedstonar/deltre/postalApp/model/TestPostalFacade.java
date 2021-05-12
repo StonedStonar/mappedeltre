@@ -95,7 +95,4 @@ public class TestPostalFacade {
             fail("Expected the test to find the country Norway since its in the Postal Facade.");
         }
     }
-
-
-
 }

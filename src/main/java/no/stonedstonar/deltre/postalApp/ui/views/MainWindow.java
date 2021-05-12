@@ -4,6 +4,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
+import javafx.scene.control.Label;
 import javafx.scene.control.TableView;
 import no.stonedstonar.deltre.postalApp.model.PostalSystem;
 import no.stonedstonar.deltre.postalApp.model.PostalInformation;
@@ -129,6 +130,7 @@ public class MainWindow implements Window{
                 .addTableViewPostalPlaceCol().addTableViewCountyCol()
                 .addTableViewMunicipalityCol().build();
         tableView.setItems(observablePostalInformation);
+        tableView.setPlaceholder(new Label("Vennligst importer en fil for å se dataene. Filen må være ANSI standard."));
         return tableView;
     }
 }

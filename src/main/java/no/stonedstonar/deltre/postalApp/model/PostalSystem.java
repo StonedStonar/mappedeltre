@@ -84,8 +84,8 @@ public class PostalSystem {
      * Gets the max value that the postal code can have.
      * @return the max value that the postal code can have.
      */
-    public long getPostalCodeMax(){
-        return postalRegister.getPostalCodeMax();
+    public long getPostalCodeMaxLength(){
+        return postalRegister.getPostalCodeMaxLength();
     }
 
     /**
