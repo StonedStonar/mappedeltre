@@ -10,7 +10,6 @@ import no.stonedstonar.deltre.postalApp.ui.controllers.Controller;
 
 
 import java.io.IOException;
-import java.util.logging.Logger;
 
 /**
  * A class that represents the UI backbone. This classes task is just to load the scene and set the scene.
