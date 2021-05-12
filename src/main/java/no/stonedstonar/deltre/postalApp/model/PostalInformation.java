@@ -17,6 +17,7 @@ public class PostalInformation {
      * Makes an instance of the postal information object.
      * @param nameOfPlace the name of the place that has this postal code.
      * @param postalCode the postal code of this place.
+     * @param newCountyAndMunicipalityNumber the county and municipality number this postal information belongs to.
      */
     public PostalInformation(String nameOfPlace, Long postalCode, Long newCountyAndMunicipalityNumber){
         checkIfPostalCodeIsValid(postalCode);

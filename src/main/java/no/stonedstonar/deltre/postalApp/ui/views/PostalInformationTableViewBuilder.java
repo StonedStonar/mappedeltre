@@ -113,10 +113,6 @@ public class PostalInformationTableViewBuilder {
         return this;
     }
 
-//   public PostalInformationTableViewBuilder addTableViewPostBoxCol(){
-//
-//    }
-
     /**
      * Returns the tableview this class has constructed.
      * @return the tableview that is made by this tableview builder.

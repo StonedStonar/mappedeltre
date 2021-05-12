@@ -35,7 +35,17 @@ public class CountyRegister {
         PostalFacade.checkIfCountyAndMunicipalityNumberOrPostalCodeIsValid(countyAndMunicipalityNumber);
         long camLong = getSubNumberAsString(countyAndMunicipalityNumber, 0, 2);
         County county = new County(countyName, camLong);
-        countyList.add(county);
+        boolean nameInRegister = countyList.stream().anyMatch(c -> c.getNameOfCounty().equals(countyName));
+        boolean numberInRegister = countyList.stream().anyMatch(c2 -> c2.getCountyNumber() == camLong);
+        if ((!nameInRegister) && (!numberInRegister)){
+            countyList.add(county);
+        }else {
+            String message = "name";
+            if (numberInRegister){
+                message = "county number";
+            }
+            throw new IllegalArgumentException("The county by the " + message + " " + countyName + " is allready in the register.");
+        }
 
     }
 

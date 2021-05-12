@@ -64,6 +64,4 @@ public class PostalRegister {
         }
         return postalInformation;
     }
-
-    //Todo: Vurder en remove metode.
 }

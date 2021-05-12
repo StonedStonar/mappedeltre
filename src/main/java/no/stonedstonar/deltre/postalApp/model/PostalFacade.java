@@ -246,7 +246,6 @@ public class PostalFacade {
         }
     }
 
-    //Todo: Alle under er statiske metoder.
     /**
      * Checks if the string is empty or null.
      * @param wordToCheck the word you want to check if its empty or null.
@@ -287,7 +286,7 @@ public class PostalFacade {
             throw new InvalidFileFormatException(error);
         }
         try {
-            checkIfCountyAndMunicipalityNumberOrPostalCodeIsValid(Long.parseLong(listOfStrings[0]));
+            PostalInformation.checkIfPostalCodeIsValid(Long.parseLong(listOfStrings[0]));
             checkString(listOfStrings[1], "place name");
             checkIfCountyAndMunicipalityNumberOrPostalCodeIsValid(Long.parseLong(listOfStrings[2]));
             checkString(listOfStrings[3], "Municipality is the wrong format.");

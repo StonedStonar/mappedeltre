@@ -24,6 +24,7 @@ public class TestCounty {
     }
     /**
      * Tests if the county constructor works with invalid input.
+     * Test type: Negativ test
      */
     @Test
     @DisplayName("Tests if the county constructor works with invalid input.")
@@ -38,6 +39,7 @@ public class TestCounty {
 
     /**
      * Tests if the county constructor works with valid input.
+     * Test type: Positiv test
      */
     @Test
     @DisplayName("Tests if the county constructor works with valid input.")
@@ -52,6 +54,7 @@ public class TestCounty {
 
     /**
      * Tests if the addMunicipality method works with invalid name.
+     * Test type: Negative
      */
     @Test
     @DisplayName("Tests if the addMunicipality method works with invalid name.")
@@ -67,6 +70,7 @@ public class TestCounty {
 
     /**
      * Tests if the addMunicipality method works with invalid numberOfMunicipality.
+     * Test type: Negative
      */
     @Test
     @DisplayName("Tests if the addMunicipality method works with invalid numberOfMunicipality.")
@@ -83,6 +87,7 @@ public class TestCounty {
 
     /**
      * Tests if the addMunicipality method works with valid input.
+     * Test type: Positive
      */
     @Test
     @DisplayName("Tests if the addMunicipality method works with valid input.")
@@ -98,6 +103,7 @@ public class TestCounty {
 
     /**
      * Tests if the getMunicipality method works as intended with invalid input.
+     * Test type: Negative
      */
     @Test
     @DisplayName("Tests if the getMunicipality method works as intended with invalid input.")
@@ -113,6 +119,7 @@ public class TestCounty {
 
     /**
      * Tests if the getMunicipality method works as intended with valid input.
+     * Test type: Positive
      */
     @Test
     @DisplayName("Tests if the getMunicipality method works as intended with valid input.")
@@ -126,6 +133,35 @@ public class TestCounty {
         }
     }
 
+    /**
+     * Tests if the checkMunicipalityIsInCounty method works as intended with invalid input.
+     * Test type: Negative
+     */
+    @Test
+    @DisplayName("Tests if the checkMunicipalityIsInCounty method works as intended with invalid input.")
+    public void TestIfCheckMunicipalityIsInCountyWorksWithInvalidInput(){
+        County county = setUpTestSpace();
+        try {
+            county.getMunicipality(50L);
+            fail("Expected to get a exception since the input municipality is not in the county.");
+        }catch (IllegalArgumentException exception){
+            assertTrue(true);
+        }
+    }
 
-
+    /**
+     * Tests if the checkMunicipalityIsInCounty method works as intended with valid input.
+     * Test type: Positive
+     */
+    @Test
+    @DisplayName("Tests if the checkMunicipalityIsInCounty method works as intended with valid input.")
+    public void TestIfCheckMunicipalityIsInCountyWorksWithValidInput(){
+        County county = setUpTestSpace();
+        try {
+            county.getMunicipality(51L);
+            assertTrue(true);
+        }catch (IllegalArgumentException exception){
+            fail("Didnt expect to get a exception since the input is valid.");
+        }
+    }
 }

@@ -32,6 +32,7 @@ public class TestPostalRegister {
 
     /**
      * Tests if the addPostalInformation works as intended with valid input.
+     * Test type: Positive
      */
     @Test
     @DisplayName("Tests if the addPostalInformation works as intended with valid input")
@@ -49,6 +50,7 @@ public class TestPostalRegister {
 
     /**
      * Tests if the addPostalInformation works as intended with null as input.
+     * Test type: Negative
      */
     @Test
     @DisplayName("Tests if the addPostalInformation works as intended with null as input.")
@@ -64,6 +66,7 @@ public class TestPostalRegister {
 
     /**
      * Tests if the getPostalInformation works as intended with null as input.
+     * Test type: Negative
      */
     @Test
     @DisplayName("Tests if the getPostalInformation works as intended with null as input.")
@@ -79,6 +82,7 @@ public class TestPostalRegister {
 
     /**
      * Tests if the getPostalInformation works as intended with invalid input.
+     * Test type: Negative
      */
     @Test
     @DisplayName("Tests if the getPostalInformation works as intended with invalid input.")
@@ -94,6 +98,7 @@ public class TestPostalRegister {
 
     /**
      * Tests if the getPostalInformation works as intended with valid input.
+     * Test type: Positive
      */
     @Test
     @DisplayName("Tests if the getPostalInformation works as intended with valid input.")

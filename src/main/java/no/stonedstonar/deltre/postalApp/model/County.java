@@ -100,9 +100,9 @@ public class County {
      * @param numberToCheck the number you want to check.
      */
     private void checkMunicipalityNumber(Long numberToCheck){
-        if ((numberToCheck < 0000) || (numberToCheck > 9999)){
+        if ((numberToCheck < 00) || (numberToCheck > 99)){
             String error = "less than 0";
-            if (numberToCheck > 9999){
+            if (numberToCheck > 99){
                 error = "greater than 9999";
             }
             throw new IllegalArgumentException("The municipality number cannot be " + error);

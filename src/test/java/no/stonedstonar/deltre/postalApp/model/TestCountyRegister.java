@@ -32,6 +32,7 @@ public class TestCountyRegister {
 
     /**
      * Tests if the addCountyWithName works with invalid name.
+     * Test type: Negative
      */
     @Test
     @DisplayName("Tests if the addCountyWithName works with invalid name.")
@@ -47,13 +48,14 @@ public class TestCountyRegister {
 
     /**
      * Tests if the addCountyWithName works with valid input.
+     * Test type: Positive
      */
     @Test
     @DisplayName("Tests if the addCountyWithName works with valid input")
     public void TestIfAddCountyWithNameWorksWithValidInput(){
         CountyRegister countyRegister = setUpTestSpace();
         try {
-            countyRegister.addCountyWithName("Oslo", 3051L);
+            countyRegister.addCountyWithName("Oslo", 0301L);
             assertTrue(true);
         }catch (IllegalArgumentException | CouldNotAddCountyException exception){
             fail("Expected the county to be added since the input is valid.");
@@ -61,7 +63,24 @@ public class TestCountyRegister {
     }
 
     /**
+     * Tests if the addCountyWithName works with duplicate county.
+     * Test type: Negative
+     */
+    @Test
+    @DisplayName("Tests if the addCountyWithName works with duplicate county.")
+    public void TestIfDuplicateCountyCanBeAdded(){
+        CountyRegister countyRegister = setUpTestSpace();
+        try {
+            countyRegister.addCountyWithName("Innlandet", 49L);
+            fail("Expected to get a exception since the county is allready in the register.");
+        }catch (IllegalArgumentException | CouldNotAddCountyException exception){
+            assertTrue(true);
+        }
+    }
+
+    /**
      * Tests if the addMunicipalityToCounty works with invalid municipality name.
+     * Test type: Negative
      */
     @Test
     @DisplayName("Tests if the addMunicipalityToCounty works with invalid municipality name.")
@@ -77,6 +96,7 @@ public class TestCountyRegister {
 
     /**
      * Tests if the addMunicipalityToCounty works with wrong countyAndMunicipalityNumber.
+     * Test type: Negative
      */
     @Test
     @DisplayName("Tests if the addMunicipalityToCounty works with wrong countyAndMunicipalityNumber.")
@@ -92,6 +112,7 @@ public class TestCountyRegister {
 
     /**
      * Tests if the checkIfCountyIsInRegister works as intended with wrong countyAndMunicipalityNumber.
+     * Test type: Negative
      */
     @Test
     @DisplayName("Tests if the checkIfCountyIsInRegister works as intended with wrong countyAndMunicipalityNumber.")
@@ -107,6 +128,7 @@ public class TestCountyRegister {
 
     /**
      * Tests if the checkIfCountyIsInRegister works with valid input.
+     * Test type: Negative
      */
     @Test
     @DisplayName("Tests if the checkIfCountyIsInRegister works with valid input.")
@@ -122,6 +144,7 @@ public class TestCountyRegister {
 
     /**
      * Tests if the getMunicipality method works with wrong input.
+     * Test type: Negative
      */
     @Test
     @DisplayName("Tests if the getMunicipality method works with wrong input.")
@@ -137,6 +160,7 @@ public class TestCountyRegister {
 
     /**
      * Tests if the getMunicipality method works with valid input.
+     * Test type: Positive
      */
     @Test
     @DisplayName("Tests if the getMunicipality method works with valid input.")
@@ -149,6 +173,4 @@ public class TestCountyRegister {
             fail("Expected to get the municipality since the input is valid.");
         }
     }
-
-
 }
