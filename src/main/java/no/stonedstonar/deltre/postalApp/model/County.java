@@ -45,7 +45,7 @@ public class County {
      */
     public void addMunicipality(String nameOfMunicipality, long numberOfMunicipality){
         PostalFacade.checkString(nameOfMunicipality, "municipality name");
-        PostalFacade.checkIfCountyAndMunicipalityNumberIsValid(numberOfMunicipality);
+        PostalFacade.checkIfCountyAndMunicipalityNumberOrPostalCodeIsValid(numberOfMunicipality);
         if (!municipalityMap.containsKey(numberOfMunicipality)){
             municipalityMap.put(numberOfMunicipality, nameOfMunicipality);
         }else {
@@ -67,7 +67,7 @@ public class County {
      * @return the name of the municipality that matches this number.
      */
     public String getMunicipality(long municipalityNumber){
-        PostalFacade.checkIfCountyAndMunicipalityNumberIsValid(municipalityNumber);
+        PostalFacade.checkIfCountyAndMunicipalityNumberOrPostalCodeIsValid(municipalityNumber);
         String nameOfMunicipality;
         if (checkIfMunicipalityIsInCounty(municipalityNumber)){
             try {

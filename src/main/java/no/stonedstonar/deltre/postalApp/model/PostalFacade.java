@@ -3,12 +3,14 @@ package no.stonedstonar.deltre.postalApp.model;
 import no.stonedstonar.deltre.postalApp.model.exceptions.CouldNotAddCountyException;
 import no.stonedstonar.deltre.postalApp.model.exceptions.CouldNotAddPostalInformationException;
 import no.stonedstonar.deltre.postalApp.model.exceptions.CouldNotGetCountyException;
+import no.stonedstonar.deltre.postalApp.model.exceptions.InvalidFileFormatException;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -45,7 +47,12 @@ public class PostalFacade {
         countyRegister = new CountyRegister();
         logger = Logger.getLogger(getClass().toString());
         addAllCounties();
-        loadFile();
+        Path path  = Path.of("src\\main\\resources\\postnummer.txt");
+        try {
+            loadFile(path);
+        }catch (InvalidFileFormatException exception){
+            logger.log(Level.WARNING, exception.getMessage());
+        }
 
     }
 
@@ -64,7 +71,7 @@ public class PostalFacade {
      * @throws CouldNotGetCountyException gets thrown if the county could not be found.
      */
     public String getMunicipalityName(long countyAndMunicipalityNumber) throws CouldNotGetCountyException {
-        checkIfCountyAndMunicipalityNumberIsValid(countyAndMunicipalityNumber);
+        checkIfCountyAndMunicipalityNumberOrPostalCodeIsValid(countyAndMunicipalityNumber);
         String municipality;
         try {
             municipality = countyRegister.getMunicipality(countyAndMunicipalityNumber);
@@ -82,7 +89,7 @@ public class PostalFacade {
      * @throws CouldNotGetCountyException gets thrown if the county could not be found.
      */
     public County getCounty(long countyAndMunicipalityNumber) throws CouldNotGetCountyException {
-        checkIfCountyAndMunicipalityNumberIsValid(countyAndMunicipalityNumber);
+        checkIfCountyAndMunicipalityNumberOrPostalCodeIsValid(countyAndMunicipalityNumber);
         County county;
         try {
             county = countyRegister.getCounty(countyAndMunicipalityNumber);
@@ -118,23 +125,31 @@ public class PostalFacade {
 
     /**
      * Loads the standard file.
+     * @param path the path of the file you want to load.
+     * @throws InvalidFileFormatException gets thrown if the path is invalid or the file format is invalid.
      */
-    private void loadFile() {
-        Path path = Path.of("src\\main\\resources\\postnummer.txt");
+    private void loadFile(Path path) throws InvalidFileFormatException {
+        if (path == null){
+            throw new InvalidFileFormatException("The path cannot be null.");
+        }
+        List<String[]> listOfAllLines = new ArrayList<>();
         try(BufferedReader bufferedReader = Files.newBufferedReader(path, Charset.forName("Cp1252"))) {
             String lineToRead = bufferedReader.readLine();
             while (lineToRead != null){
                 lineToRead = bufferedReader.readLine();
                 if (lineToRead != null){
                     String[] listOfStrings = lineToRead.split("\t+");
-                    if (listOfStrings.length == 5){
-                        addNewInformation(listOfStrings);
-                    }
+                    listOfAllLines.add(listOfStrings);
                 }
             }
         }catch (IOException exception){
           logger.log(Level.SEVERE, exception.getMessage());
         }
+        for (String[] listOfAllLine : listOfAllLines) {
+            checkIfFileIsRightFormat(listOfAllLine);
+        }
+
+        listOfAllLines.forEach(this::addNewInformation);
     }
 
     /**
@@ -189,7 +204,7 @@ public class PostalFacade {
     private void addCounty(String nameOfCounty, Long countyAndMunicipalityNumber) {
         try {
             checkString(nameOfCounty, "name of county");
-            checkIfCountyAndMunicipalityNumberIsValid(countyAndMunicipalityNumber);
+            checkIfCountyAndMunicipalityNumberOrPostalCodeIsValid(countyAndMunicipalityNumber);
             countyRegister.addCountyWithName(nameOfCounty, countyAndMunicipalityNumber);
         }catch (CouldNotAddCountyException | IllegalArgumentException exception){
             logger.log(Level.WARNING, exception.getMessage());
@@ -205,7 +220,7 @@ public class PostalFacade {
     private void addMunicipality(String municipalityName, Long countyAndMunicipalityNumber) throws CouldNotGetCountyException {
         try {
             checkString(municipalityName, "municipality name");
-            checkIfCountyAndMunicipalityNumberIsValid(countyAndMunicipalityNumber);
+            checkIfCountyAndMunicipalityNumberOrPostalCodeIsValid(countyAndMunicipalityNumber);
             countyRegister.addMunicipalityToCounty(municipalityName, countyAndMunicipalityNumber);
         }catch (CouldNotGetCountyException | IllegalArgumentException exception){
             logger.log(Level.WARNING, exception.getMessage());
@@ -233,15 +248,41 @@ public class PostalFacade {
      * Checks if the CountyAndMunicipalityNumber is a valid format.
      * @param countyAndMunicipalityNumber the number of the county and the municipality number that you want to check .
      */
-    public static void checkIfCountyAndMunicipalityNumberIsValid(Long countyAndMunicipalityNumber){
+    public static void checkIfCountyAndMunicipalityNumberOrPostalCodeIsValid(Long countyAndMunicipalityNumber){
         if ((countyAndMunicipalityNumber == null) || (countyAndMunicipalityNumber <= minLengthCountyAndMunicipalityNumber) || (countyAndMunicipalityNumber > maxLengthCountyAndMunicipalityNumber)){
             String error = "must be between 0000 and 9999.";
             if (countyAndMunicipalityNumber == null){
                 error = "cannot be null.";
             }
-            throw new IllegalArgumentException("The county and municipality number " + error);
+            throw new IllegalArgumentException("The county and municipality number or postal code " + error);
         }
     }
+
+    /**
+     * Checks if the input is the right format that this program needs.
+     * @param listOfStrings the list of strings you want to check the format of.
+     * @throws InvalidFileFormatException gets thrown if the list of strings are of the wrong format.
+     */
+    private void checkIfFileIsRightFormat(String[] listOfStrings) throws InvalidFileFormatException {
+        String error = "The file is of wrong format.";
+        if (listOfStrings.length != 5){
+            throw new InvalidFileFormatException(error);
+        }
+        try {
+            checkIfCountyAndMunicipalityNumberOrPostalCodeIsValid(Long.parseLong(listOfStrings[0]));
+            checkString(listOfStrings[1], "place name");
+            checkIfCountyAndMunicipalityNumberOrPostalCodeIsValid(Long.parseLong(listOfStrings[2]));
+            checkString(listOfStrings[3], "Municipality is the wrong format.");
+            checkString(listOfStrings[4], "Postal letter for what postbox they have.");
+        }catch (NumberFormatException exception){
+            throw new InvalidFileFormatException(error + " " + exception.getMessage() + " a file read is of the wrong format.");
+        }catch (IllegalArgumentException exception){
+            throw new InvalidFileFormatException(error +  " " + exception.getMessage());
+        }
+    }
+
+
+
 
     /**
      * Gets the min value that the postal code should be.

@@ -32,7 +32,7 @@ public class CountyRegister {
      * @throws CouldNotAddCountyException gets thrown if the county by this number is already in the register.
      */
     public void addCountyWithName(String countyName, Long countyAndMunicipalityNumber) throws CouldNotAddCountyException {
-        PostalFacade.checkIfCountyAndMunicipalityNumberIsValid(countyAndMunicipalityNumber);
+        PostalFacade.checkIfCountyAndMunicipalityNumberOrPostalCodeIsValid(countyAndMunicipalityNumber);
         long camLong = getSubNumberAsString(countyAndMunicipalityNumber, 0, 2);
         County county = new County(countyName, camLong);
         countyList.add(county);
@@ -47,7 +47,7 @@ public class CountyRegister {
      */
     public void addMunicipalityToCounty(String municipalityName, Long countyAndMunicipalityNumber) throws CouldNotGetCountyException {
         PostalFacade.checkString(municipalityName, "municipality name");
-        PostalFacade.checkIfCountyAndMunicipalityNumberIsValid(countyAndMunicipalityNumber);
+        PostalFacade.checkIfCountyAndMunicipalityNumberOrPostalCodeIsValid(countyAndMunicipalityNumber);
         if (checkIfCountyIsInRegister(countyAndMunicipalityNumber)){
             County county = getCounty(countyAndMunicipalityNumber);
             county.addMunicipality(municipalityName, countyAndMunicipalityNumber);
@@ -62,7 +62,7 @@ public class CountyRegister {
      */
     public boolean checkIfCountyIsInRegister(Long countyAndMunicipalityNumber){
         boolean valid;
-        PostalFacade.checkIfCountyAndMunicipalityNumberIsValid(countyAndMunicipalityNumber);
+        PostalFacade.checkIfCountyAndMunicipalityNumberOrPostalCodeIsValid(countyAndMunicipalityNumber);
         Long countyNumber = getSubNumberAsString(countyAndMunicipalityNumber, 0, 2);
         try {
             valid = countyList.stream().filter(county -> county.getCountyNumber() == countyNumber).findFirst().isPresent();
@@ -99,7 +99,7 @@ public class CountyRegister {
      */
     public boolean checkIfMunicipalityIsInCounty(Long countyAndMunicipalityNumber) throws CouldNotGetCountyException{
         boolean valid;
-        PostalFacade.checkIfCountyAndMunicipalityNumberIsValid(countyAndMunicipalityNumber);
+        PostalFacade.checkIfCountyAndMunicipalityNumberOrPostalCodeIsValid(countyAndMunicipalityNumber);
         County county = getCounty(countyAndMunicipalityNumber);
         valid = county.checkIfMunicipalityIsInCounty(countyAndMunicipalityNumber);
         return valid;

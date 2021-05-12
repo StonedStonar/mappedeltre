@@ -5,10 +5,8 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
-import no.stonedstonar.deltre.postalApp.model.PostalFacade;
 import no.stonedstonar.deltre.postalApp.model.PostalInformation;
 import no.stonedstonar.deltre.postalApp.ui.views.MainWindow;
-import no.stonedstonar.deltre.postalApp.ui.views.PostalApp;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -28,6 +26,8 @@ public class MainController implements Controller{
     private TextField searchField;
     @FXML
     private GridPane mainGridPane;
+    @FXML
+    private MenuItem importMenu;
 
     private TableView<PostalInformation> postalInformationTableView;
 
@@ -74,6 +74,7 @@ public class MainController implements Controller{
                 postalInformationTableView.setPlaceholder(new Label("Ingen resultater funnet med søkeord \"" + newValue + "\"" ));
             }
         });
+        searchField.setPromptText("Skriv inn et postnummer eller stedsnavn.");
         quitMenu.setOnAction(actionEvent -> {
 
         });

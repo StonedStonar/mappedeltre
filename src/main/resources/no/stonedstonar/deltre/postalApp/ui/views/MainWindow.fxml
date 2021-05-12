@@ -50,6 +50,7 @@
       <menus>
         <Menu mnemonicParsing="false" text="Fil">
           <items>
+                  <MenuItem fx:id="importMenu" mnemonicParsing="false" text="Importer ny postkode fil" />
             <MenuItem fx:id="quitMenu" mnemonicParsing="false" text="Avslutt" />
           </items>
         </Menu>

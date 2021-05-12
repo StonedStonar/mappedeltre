@@ -21,7 +21,7 @@ public class PostalInformation {
     public PostalInformation(String nameOfPlace, Long postalCode, Long newCountyAndMunicipalityNumber){
         checkIfPostalCodeIsValid(postalCode);
         PostalFacade.checkString(nameOfPlace, "name of the place");
-        PostalFacade.checkIfCountyAndMunicipalityNumberIsValid(newCountyAndMunicipalityNumber);
+        PostalFacade.checkIfCountyAndMunicipalityNumberOrPostalCodeIsValid(newCountyAndMunicipalityNumber);
         postalCodeOfPlace = postalCode;
         this.nameOfPlace = nameOfPlace;
         countyAndMunicipalityNumber = newCountyAndMunicipalityNumber;
@@ -40,7 +40,7 @@ public class PostalInformation {
      * @param newCountyAndMunicipalityNumber the new county and municipality number.
      */
     public void setCountyAndMunicipalityNumber(Long newCountyAndMunicipalityNumber){
-        PostalFacade.checkIfCountyAndMunicipalityNumberIsValid(newCountyAndMunicipalityNumber);
+        PostalFacade.checkIfCountyAndMunicipalityNumberOrPostalCodeIsValid(newCountyAndMunicipalityNumber);
         countyAndMunicipalityNumber = newCountyAndMunicipalityNumber;
     }
 
